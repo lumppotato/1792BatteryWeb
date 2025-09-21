@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Management</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<h1>User Management</h1>
+<p><a href="/admin/users/new">➕ Add User</a></p>
+<table>
+    <thead>
+    <tr>
+        <th>Username</th><th>Role</th><th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="u : ${users}">
+        <td th:text="${u.username}"></td>
+        <td th:text="${u.role}"></td>
+        <td>
+            <a th:href="@{'/admin/users/' + ${u.id} + '/edit'}">✏️ Edit</a> |
+            <a th:href="@{'/admin/users/' + ${u.id} + '/delete'}"
+               onclick="return confirm('Delete this user?');">🗑 Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p><a href="/">⬅ Back</a></p>
+</body>
+</html>

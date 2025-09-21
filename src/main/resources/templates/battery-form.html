@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Battery Form</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<h1 th:text="${battery.id == null ? 'Add New Battery' : 'Edit Battery'}"></h1>
+
+<form th:action="@{${battery.id == null ? '/batteries' : '/batteries/' + ${battery.id}}}"
+      th:object="${battery}" method="post">
+
+    <label>Serial Number:
+        <input type="text" th:field="*{serialNumber}" required/>
+    </label><br/>
+
+    <label>Brand:
+        <input type="text" th:field="*{brand}"/>
+    </label><br/>
+
+    <label>Capacity (mAh):
+        <input type="number" th:field="*{capacitymAh}"/>
+    </label><br/>
+
+    <label>Purchase Date:
+        <input type="date" th:field="*{purchaseDate}"/>
+    </label><br/>
+
+    <label>Status:
+        <select th:field="*{status}">
+            <option th:value="NEW">NEW</option>
+            <option th:value="GOOD">GOOD</option>
+            <option th:value="DEAD">DEAD</option>
+            <option th:value="RETIRED">RETIRED</option>
+        </select>
+    </label><br/>
+
+    <label>Entered Service:
+        <input type="date" th:field="*{enteredService}"/>
+    </label><br/>
+
+    <label>Usage Notes:
+        <textarea th:field="*{usage}"></textarea>
+    </label><br/>
+
+    <label>RFID Tag:
+        <input type="number" th:field="*{rfidTag}"/>
+    </label><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+<p><a href="/batteries">⬅ Back to Batteries</a></p>
+</body>
+</html>

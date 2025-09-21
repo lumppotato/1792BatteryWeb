@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Batteries</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<h1>Batteries</h1>
+<p><a href="/batteries/new">➕ Add New Battery</a></p>
+<table>
+    <thead>
+    <tr>
+        <th>Serial</th><th>Brand</th><th>Capacity</th>
+        <th>Status</th><th>RFID</th><th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="b : ${batteries}">
+        <td th:text="${b.serialNumber}"></td>
+        <td th:text="${b.brand}"></td>
+        <td th:text="${b.capacitymAh}"></td>
+        <td th:text="${b.status}"></td>
+        <td th:text="${b.rfidTag}"></td>
+        <td>
+            <a th:href="@{'/batteries/' + ${b.id} + '/edit'}">✏️ Edit</a> |
+            <a th:href="@{'/batteries/' + ${b.id} + '/delete'}"
+               onclick="return confirm('Delete this battery?');">🗑 Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p><a href="/">⬅ Back to Home</a></p>
+</body>
+</html>

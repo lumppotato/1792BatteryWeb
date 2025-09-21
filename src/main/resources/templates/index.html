@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Battery Tracker</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<h1>Welcome to the Battery Tracker</h1>
+<p>Select a section to view:</p>
+<nav>
+    <ul>
+        <li><a href="/batteries">🔋 Batteries</a></li>
+        <li><a href="/tests">📊 Battery Tests</a></li>
+        <li><a href="/usage">🤖 Usage Logs</a></li>
+    </ul>
+</nav>
+</body>
+</html>
