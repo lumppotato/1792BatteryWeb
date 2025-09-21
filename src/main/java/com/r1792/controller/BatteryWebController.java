@@ -22,34 +22,34 @@ public class BatteryWebController {
         return "batteries";
     }
 
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
+    @GetMapping("/add")
+    public String showAddForm(Model model) {
         model.addAttribute("battery", new Battery());
-        return "battery-form";
+        return "battery-form"; // battery-form.html
     }
 
-    @PostMapping
-    public String create(@ModelAttribute Battery battery) {
+    @PostMapping("/add")
+    public String addBattery(@ModelAttribute Battery battery) {
         service.save(battery);
         return "redirect:/batteries";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("battery", service.get(id));
-        return "battery-form";
+        Battery battery = service.get(id);
+        model.addAttribute("battery", battery);
+        return "battery-form"; // same form, pre-filled
     }
 
-    @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute Battery battery) {
+    @PostMapping("/edit/{id}")
+    public String updateBattery(@PathVariable Long id, @ModelAttribute Battery battery) {
         battery.setId(id);
         service.save(battery);
         return "redirect:/batteries";
     }
-
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
-        service.delete(id);
+    @PostMapping("/save")
+    public String saveBattery(@ModelAttribute Battery battery) {
+        service.save(battery);
         return "redirect:/batteries";
     }
 }

@@ -1,55 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Battery Form</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <title th:text="${battery.id == null} ? 'Add Battery' : 'Edit Battery'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1 th:text="${battery.id == null ? 'Add New Battery' : 'Edit Battery'}"></h1>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<form th:action="@{${battery.id == null ? '/batteries' : '/batteries/' + ${battery.id}}}"
-      th:object="${battery}" method="post">
+<h2 th:text="${battery.id == null} ? 'Add Battery' : 'Edit Battery'"></h2>
+<div class="form-container">
+<form th:action="@{/batteries/save}" th:object="${battery}" method="post">
+    <input type="hidden" th:field="*{id}"/>
 
-    <label>Serial Number:
-        <input type="text" th:field="*{serialNumber}" required/>
-    </label><br/>
-
-    <label>Brand:
-        <input type="text" th:field="*{brand}"/>
-    </label><br/>
-
-    <label>Capacity (mAh):
-        <input type="number" th:field="*{capacitymAh}"/>
-    </label><br/>
-
-    <label>Purchase Date:
-        <input type="date" th:field="*{purchaseDate}"/>
-    </label><br/>
-
-    <label>Status:
-        <select th:field="*{status}">
-            <option th:value="NEW">NEW</option>
-            <option th:value="GOOD">GOOD</option>
-            <option th:value="DEAD">DEAD</option>
-            <option th:value="RETIRED">RETIRED</option>
-        </select>
-    </label><br/>
-
-    <label>Entered Service:
-        <input type="date" th:field="*{enteredService}"/>
-    </label><br/>
-
-    <label>Usage Notes:
-        <textarea th:field="*{usage}"></textarea>
-    </label><br/>
-
-    <label>RFID Tag:
-        <input type="number" th:field="*{rfidTag}"/>
-    </label><br/>
+    Serial #: <input type="text" th:field="*{serialNumber}"/><br/>
+    Brand: <input type="text" th:field="*{brand}"/><br/>
+    Capacity (mAh): <input type="number" th:field="*{capacitymAh}"/>
+    Purchase Date: <input type="date" th:field="*{purchaseDate}"/><br/>
+    Entered Service: <input type="date" th:field="*{enteredService}"/><br/>
+    Status:
+    <select th:field="*{status}">
+        <option value="NEW">NEW</option>
+        <option value="GOOD">GOOD</option>
+        <option value="DEAD">DEAD</option>
+        <option value="RETIRED">RETIRED</option>
+    </select><br/>
+    Usage:
+    <select th:field="*{usage}">
+        <option value="Competition">Competition</option>
+        <option value="Testing">Testing</option>
+    </select><br/>
+    RFID Tag: <input type="number" th:field="*{rfidTag}"/><br/>
 
     <button type="submit">Save</button>
 </form>
-
-<p><a href="/batteries">⬅ Back to Batteries</a></p>
+</div>
 </body>
 </html>

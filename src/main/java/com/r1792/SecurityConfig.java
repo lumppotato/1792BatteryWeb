@@ -16,10 +16,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // 1. public pages first
-                        .requestMatchers("/login", "/css/**").permitAll()
+
+                        .requestMatchers("/login", "/css/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // example: admin area
-                        // 2. catch-all last
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -30,6 +29,7 @@ public class SecurityConfig {
                         })
                         .permitAll()
                 )
+
                 .logout(logout -> logout.permitAll());
 
 

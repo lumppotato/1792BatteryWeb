@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Batteries</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <h1>Batteries</h1>
-<p><a href="/batteries/new">➕ Add New Battery</a></p>
+<a th:href="@{/batteries/add}" class="btn btn-add">➕ Add Battery</a>
 <table>
     <thead>
     <tr>
@@ -22,13 +23,13 @@
         <td th:text="${b.status}"></td>
         <td th:text="${b.rfidTag}"></td>
         <td>
-            <a th:href="@{'/batteries/' + ${b.id} + '/edit'}">✏️ Edit</a> |
-            <a th:href="@{'/batteries/' + ${b.id} + '/delete'}"
+            <a th:href="@{'/batteries/'  + 'edit/' + ${b.id}}" class="btn btn-edit">✏️ Edit</a> |
+            <a th:href="@{'/batteries/' + 'delete/' + ${b.id}}" class="btn btn-delete"
                onclick="return confirm('Delete this battery?');">🗑 Delete</a>
         </td>
     </tr>
     </tbody>
 </table>
-<p><a href="/">⬅ Back to Home</a></p>
+<p><a href="/" class="btn">⬅ Back to Home</a></p>
 </body>
 </html>

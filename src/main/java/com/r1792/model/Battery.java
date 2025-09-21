@@ -15,7 +15,10 @@ public class Battery {
     @Column(name = "serial_number", unique = true, nullable = false)
     private String serialNumber;
 
+    @Column(name = "brand")
     private String brand;
+
+    @Column(name = "capacity_mAh")
     private Integer capacitymAh;
 
     @Column(name = "purchase_date")
@@ -32,6 +35,7 @@ public class Battery {
 
     @Column(name = "rfid_tag")
     private Integer rfidTag;
+
 
     public enum Status { NEW, GOOD, DEAD, RETIRED }
 
