@@ -16,11 +16,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="b : ${batteries}">
+    <tr th:each="b : ${batteries}"  th:class="${b.rowClass}">
         <td th:text="${b.serialNumber}"></td>
         <td th:text="${b.brand}"></td>
         <td th:text="${b.capacitymAh}"></td>
-        <td th:text="${b.status}"></td>
+        <td th:text="${b.status}" ></td>
         <td th:text="${b.rfidTag}"></td>
         <td>
             <a th:href="@{'/batteries/'  + 'edit/' + ${b.id}}" class="btn btn-edit">✏️ Edit</a> |

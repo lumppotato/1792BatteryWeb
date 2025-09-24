@@ -18,7 +18,10 @@
     <label>Password:
         <input type="password" th:field="*{password}" th:placeholder="${user.id != null ? 'Leave blank to keep existing' : ''}"/>
     </label><br/>
-
+    <label>First Name:</label>
+        <input type="text" th:field="*{firstName}" required/>
+    <label>Last Name:</label>
+        <input type="text" th:field="*{lastName}" required/>
     <label>Role:
         <select th:field="*{role}">
             <option value="ROLE_ADMIN">Admin</option>
@@ -26,10 +29,10 @@
         </select>
     </label><br/>
 
-    <button type="submit">Save</button>
+    <button type="submit" class="btn">Save</button>
 </form>
 </div>
 
-<p><a href="/admin/users">⬅ Back to Users</a></p>
+<p><a href="/admin/users" class="btn">⬅ Back to Users</a></p>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Battery Tests</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<h2 th:text="'Tests for ' + ${battery.serialNumber}"></h2>
+
+<a th:href="@{|/batteries/${battery.id}/tests/add|}" class="btn">Add New Test</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Voltage</th>
+        <th>Resistance</th>
+        <th>Temp</th>
+        <th>Tester</th>
+        <th>1v1</th>
+        <th>18v2</th>
+        <th>Amp Hours</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="test : ${tests}">
+        <td th:text="${test.testDate}"></td>
+        <td th:text="${test.voltage}"></td>
+        <td th:text="${test.internalResistance}"></td>
+        <td th:text="${test.temperature}"></td>
+        <td th:text="${test.tester}"></td>
+        <td th:text="${test.oneV1}"></td>
+        <td th:text="${test.eighteenV2}"></td>
+        <td th:text="${test.ampHours}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Battery Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<h2>Battery Details</h2>
+
+<div class="card">
+    <p><strong>Serial Number:</strong> <span th:text="${battery.serialNumber}"></span></p>
+    <p><strong>Brand:</strong> <span th:text="${battery.brand}"></span></p>
+    <p><strong>Capacity (mAh):</strong> <span th:text="${battery.capacitymAh}"></span></p>
+    <p><strong>Purchase Date:</strong> <span th:text="${battery.purchaseDate}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${battery.status}"></span></p>
+</div>
+
+<h3>Tests</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Test Date</th>
+        <th>Voltage</th>
+        <th>Resistance</th>
+        <th>Temp</th>
+        <th>Tester</th>
+        <th>Amp Hours</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="test : ${tests}">
+        <td th:text="${test.testDate}"></td>
+        <td th:text="${test.voltage}"></td>
+        <td th:text="${test.internalResistance}"></td>
+        <td th:text="${test.temperature}"></td>
+        <td th:text="${test.tester}"></td>
+        <td th:text="${test.ampHours}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a class="btn" th:href="@{/batteries}">Back to Battery List</a>
+</body>
+</html>

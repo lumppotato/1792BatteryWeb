@@ -200,3 +200,27 @@ form input, form select, form textarea {
 .btn-delete:hover {
     background-color: #8a3736;
 }
+
+/* Status colors */
+.status {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 5px;
+    color: white;
+}
+
+.status-good {
+    background-color: #113711;
+}
+
+.status-bad {
+    background-color: #5c0000;
+}
+
+.status-degraded {
+    background-color: #54421e;
+}
+
+.status-new {
+    background-color: #173f59;
+}

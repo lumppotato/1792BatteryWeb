@@ -22,6 +22,14 @@ public class BatteryWebController {
         return "batteries";
     }
 
+    @GetMapping("/{id}")
+    public String viewBattery(@PathVariable Long id, Model model) {
+        Battery battery = service.get(id);
+        model.addAttribute("battery", battery);
+        model.addAttribute("tests", battery.getTests()); // if you mapped OneToMany
+        return "battery-details";
+    }
+
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("battery", new Battery());

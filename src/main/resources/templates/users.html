@@ -7,25 +7,27 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 <h1>User Management</h1>
-<p><a href="/admin/users/new">➕ Add User</a></p>
+<p><a href="/admin/users/new" class="btn">➕ Add User</a></p>
 <table>
     <thead>
     <tr>
-        <th>Username</th><th>Role</th><th>Actions</th>
+        <th>First Name</th><th>Last Name</th><th>Username</th><th>Role</th><th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="u : ${users}">
+        <td th:text="${u.firstName}"></td>
+        <td th:text="${u.lastName}"></td>
         <td th:text="${u.username}"></td>
         <td th:text="${u.role}"></td>
         <td>
-            <a th:href="@{'/admin/users/' + ${u.id} + '/edit'}">✏️ Edit</a> |
-            <a th:href="@{'/admin/users/' + ${u.id} + '/delete'}"
-               onclick="return confirm('Delete this user?');">🗑 Delete</a>
+            <button th:href="@{'/admin/users/' + ${u.id} + '/edit'}" class="btn-edit">✏️ Edit</button> |
+            <button th:href="@{'/admin/users/' + ${u.id} + '/delete'}" class="btn-delete"
+               onclick="return confirm('Delete this user?');">🗑 Delete</button>
         </td>
     </tr>
     </tbody>
 </table>
-<p><a href="/">⬅ Back</a></p>
+<p><a href="/" class="btn">⬅ Back</a></p>
 </body>
 </html>

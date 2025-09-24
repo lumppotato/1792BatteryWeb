@@ -20,7 +20,10 @@ public class User {
 
     @Column(nullable = false)
     private String role;  // e.g. ROLE_ADMIN, ROLE_STUDENT
-
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
 
 
     // --- Getters and Setters ---
@@ -35,4 +38,9 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 }
