@@ -23,6 +23,7 @@
         <td th:text="${b.status}" ></td>
         <td th:text="${b.rfidTag}"></td>
         <td>
+            <a th:href="@{'/batteries/'   + ${b.id}}" class="btn">View</a> |
             <a th:href="@{'/batteries/'  + 'edit/' + ${b.id}}" class="btn btn-edit">✏️ Edit</a> |
             <a th:href="@{'/batteries/' + 'delete/' + ${b.id}}" class="btn btn-delete"
                onclick="return confirm('Delete this battery?');">🗑 Delete</a>

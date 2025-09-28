@@ -20,7 +20,7 @@ public class Battery {
     @Column(name = "brand")
     private String brand;
     @Column(name = "entered_service")
-    private LocalDateTime enteredService;
+    private LocalDate enteredService;
     @Column(name = "capacity_mAh")
     private Integer capacitymAh;
 
@@ -32,7 +32,8 @@ public class Battery {
 
     @OneToMany(mappedBy = "battery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BatteryTest> tests = new ArrayList<>();
-    @Lob
+
+    @Column(name = "usage_desc")
     private String usage;
 
     @Column(name = "rfid_tag")
@@ -43,7 +44,7 @@ public class Battery {
     public enum Status { NEW, GOOD, DEAD, RETIRED }
 
 
-    public void setEnteredService(LocalDateTime enteredService) {
+    public void setEnteredService(LocalDate enteredService) {
         this.enteredService = enteredService;
     }
 
@@ -83,8 +84,10 @@ public class Battery {
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
 
-    public LocalDateTime getEnteredService() { return enteredService; }
-    public void setEnteredService(LocalDate enteredService) { this.enteredService = enteredService.atStartOfDay(); }
+
+    public LocalDate getEnteredService() {
+        return enteredService;
+    }
 
     public String getUsage() { return usage; }
     public void setUsage(String usage) { this.usage = usage; }

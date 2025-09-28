@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Usage</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<h2>Add Usage</h2>
+<div class="form-container">
+<form th:action="@{/usage/add}" th:object="${usage}" method="post">
+    <!-- Dropdown for selecting battery -->
+    <label for="battery">Select Battery:</label>
+    <select id="battery" th:field="*{battery.id}">
+        <option th:each="b : ${batteries}"
+                th:value="${b.id}"
+                th:text="${b.serialNumber}"></option>
+    </select>
+    <br/>
+
+    <label>Robot Name:</label>
+    <input type="text" th:field="*{robotName}"/><br/>
+
+    <label>Event:</label>
+    <input type="text" th:field="*{eventName}"/><br/>
+
+    <label>Date:</label>
+    <input type="datetime-local" th:field="*{usedDate}"/><br/>
+
+    <button type="submit">Save</button>
+</form>
+</div>
+
+</body>
+</html>

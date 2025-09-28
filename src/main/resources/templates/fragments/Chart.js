@@ -7,27 +7,61 @@ fetch(`/batteries/${batteryId}/tests/${testId}/data`)
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.map(d => d.time),
+                labels: labels,
                 datasets: [
                     {
                         label: 'Voltage (V)',
-                        data: data.map(d => d.voltage),
+                        data: voltageData,
                         borderColor: 'blue',
-                        yAxisID: 'y1'
+                        yAxisID: 'y',
+                        tension: 0.1
                     },
                     {
                         label: 'Current (A)',
-                        data: data.map(d => d.current),
+                        data: currentData,
                         borderColor: 'red',
-                        yAxisID: 'y2'
+                        yAxisID: 'y1',
+                        tension: 0.1
                     }
                 ]
             },
             options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                stacked: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Battery Test Results'
+                    }
+                },
                 scales: {
-                    y1: { type: 'linear', position: 'left' },
-                    y2: { type: 'linear', position: 'right' }
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Voltage (V)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Current (A)'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
                 }
             }
+
         });
     });

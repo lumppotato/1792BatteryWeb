@@ -3,12 +3,14 @@
 <head>
     <title>All Battery Tests</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <h2>All Battery Tests</h2>
-
+<a th:href="@{/battery-tests/add}" class="btn btn-add">➕ Add Battery Tests</a>
+<a th:href="@{/battery-tests/upload}" class="btn btn-add">➕ Upload Battery Test CSV</a>
 <table>
     <thead>
     <tr>

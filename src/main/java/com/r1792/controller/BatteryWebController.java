@@ -1,19 +1,25 @@
 package com.r1792.controller;
 
 import com.r1792.model.Battery;
+import com.r1792.model.BatteryUsage;
 import com.r1792.service.BatteryService;
+import com.r1792.service.BatteryUsageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/batteries")
 public class BatteryWebController {
 
     private final BatteryService service;
+    private final BatteryUsageService usageService;
 
-    public BatteryWebController(BatteryService service) {
+    public BatteryWebController(BatteryService service, BatteryUsageService usageService) {
         this.service = service;
+        this.usageService = usageService;
     }
 
     @GetMapping
@@ -26,8 +32,15 @@ public class BatteryWebController {
     public String viewBattery(@PathVariable Long id, Model model) {
         Battery battery = service.get(id);
         model.addAttribute("battery", battery);
-        model.addAttribute("tests", battery.getTests()); // if you mapped OneToMany
-        return "battery-details";
+
+        // Tests (assuming you mapped them correctly with @OneToMany in Battery entity)
+        model.addAttribute("tests", battery.getTests());
+
+        // Usage logs (use the injected instance, not static)
+        List<BatteryUsage> usageLogs = usageService.getByBattery(id);
+        model.addAttribute("usageLogs", usageLogs);
+
+        return "battery-details"; // goes to templates/battery-details.html
     }
 
     @GetMapping("/add")

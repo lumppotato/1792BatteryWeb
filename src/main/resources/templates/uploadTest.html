@@ -3,9 +3,11 @@
 <head>
     <title>Upload Battery Test</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
 </head>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <body>
-<h2>Upload Battery Test CSV</h2>
+<h2>Upload Battery Test CSV (Under development)</h2>
 <form th:action="@{/battery-tests/upload}" method="post" enctype="multipart/form-data">
     <input type="file" name="file"/>
     <button type="submit">Upload</button>

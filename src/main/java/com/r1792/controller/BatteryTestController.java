@@ -36,14 +36,13 @@ public class BatteryTestController {
     }
 
     @GetMapping("/add")
-    public String showAddForm(@PathVariable Long batteryId, Model model) {
-        BatteryTest test = new BatteryTest();
-        test.setBattery(batteryService.get(batteryId));
-        model.addAttribute("batteryTest", test);
+    public String showAddForm(Model model) {
+        model.addAttribute("test", new BatteryTest());
+        model.addAttribute("batteries", batteryService.getAll()); // all batteries for dropdown
         return "battery-test-form";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/addbattery")
     public String addTest(@PathVariable Long batteryId, @ModelAttribute BatteryTest batteryTest) {
         batteryTest.setBattery(batteryService.get(batteryId));
         testService.save(batteryTest);
@@ -56,7 +55,7 @@ public class BatteryTestController {
     }
     @GetMapping("/upload")
     public String uploadForm() {
-        return "uploadTest"; // Thymeleaf template with file input
+        return "uploadTest"; // // long battery test upload
     }
 
     @PostMapping("/upload")
@@ -69,9 +68,13 @@ public class BatteryTestController {
             // Compress points
             List<BatteryTestCompressor.TestPoint> points = compressor.compressCsv(temp);
 
-            // TODO: save points to database here
-            model.addAttribute("points", points);
-            model.addAttribute("count", points.size());
+            //B5 = Tested Capacity
+
+            //A2 = Date
+
+            //C4 Pass / Fail
+
+            //Line 19 starts test B19 = Time, C19 = V, D19 = Current
 
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());

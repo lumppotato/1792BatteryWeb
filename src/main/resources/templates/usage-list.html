@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Battery Usage Logs</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<h2 th:if="${battery != null}" th:text="'Usage Logs for Battery ' + ${battery.serialNumber}"></h2>
+<h2 th:if="${battery == null}">All Usage Logs</h2>
+<a th:href="@{/usage/add}" class="btn btn-add">➕ Add Usage</a>
+<table>
+    <thead>
+    <tr>
+        <th>Date Used</th>
+        <th>Robot</th>
+        <th>Event</th>
+        <th>Battery</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="u : ${logs}">
+        <td th:text="${#temporals.format(u.usedDate, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${u.robotName}"></td>
+        <td th:text="${u.eventName}"></td>
+        <td th:text="${u.battery.serialNumber}"></td>
+        <td>
+            <a th:href="@{'/usage/delete/' + ${u.id}}" class="btn btn-danger">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${battery != null}">
+    <a th:href="@{'/usage/add/' + ${battery.id}}" class="btn btn-primary">Add Usage</a>
+</div>
+
+</body>
+</html>

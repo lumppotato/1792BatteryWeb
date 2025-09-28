@@ -17,6 +17,26 @@
     <p><strong>Status:</strong> <span th:text="${battery.status}"></span></p>
 </div>
 
+<!-- usage logs -->
+<h3>Usage Logs</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Date Used</th>
+        <th>Robot</th>
+        <th>Event</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="u : ${usageLogs}">
+        <td th:text="${#temporals.format(u.usedDate, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${u.robotName}"></td>
+        <td th:text="${u.eventName}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- battery tests  Need to add JS charts from imported data-->
 <h3>Tests</h3>
 <table>
     <thead>

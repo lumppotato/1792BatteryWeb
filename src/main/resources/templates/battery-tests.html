@@ -10,7 +10,7 @@
 <h2 th:text="'Tests for ' + ${battery.serialNumber}"></h2>
 
 <a th:href="@{|/batteries/${battery.id}/tests/add|}" class="btn">Add New Test</a>
-
+<a th:href="@{/battery-tests/add}" class="btn btn-add">➕ Add Battery</a>
 <table>
     <thead>
     <tr>
