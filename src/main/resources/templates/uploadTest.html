@@ -8,9 +8,11 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <body>
 <h2>Upload Battery Test CSV (Under development)</h2>
+<div class="form-container">
 <form th:action="@{/battery-tests/upload}" method="post" enctype="multipart/form-data">
     <input type="file" name="file"/>
     <button type="submit">Upload</button>
 </form>
+</div>
 </body>
 </html>

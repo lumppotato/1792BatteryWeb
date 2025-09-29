@@ -2,6 +2,8 @@ package com.r1792.model;
 
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +16,7 @@ public class BatteryTest {
     @JoinColumn(name = "battery_id", nullable = false)
     private Battery battery;
     @Column (name = "test_date")
-    private LocalDateTime testDate = LocalDateTime.now();
+    private LocalDate testDate = LocalDate.now();
     @Column (name = "voltage")
     private Double voltage;
     @Column (name = "internal_resistance")
@@ -29,9 +31,22 @@ public class BatteryTest {
     private double eighteenV2; // 18v at 2 amps
     @Column (name = "amp_hours")
     private Integer ampHours;
+    @Column (name = "rated_capacity")
+    private Double ratedCapacity;
+    @Column (name = "tested_capacity")
+    private Double testedCapacity;
+    @Column (name = "test_time")
+    private String testTime;
+    @Column (name = "pass_test")
+    private Boolean pass;
+    @Enumerated(EnumType.STRING)
+    private TestType testType;
+
+    @Column(columnDefinition = "JSON")
+    private String points;
 
     // getters and setters
-
+    public enum TestType {LONG, SHORT};
     public Long getId() {
         return id;
     }
@@ -48,11 +63,11 @@ public class BatteryTest {
         this.battery = battery;
     }
 
-    public LocalDateTime getTestDate() {
+    public LocalDate getTestDate() {
         return testDate;
     }
 
-    public void setTestDate(LocalDateTime testDate) {
+    public void setTestDate(LocalDate testDate) {
         this.testDate = testDate;
     }
 
@@ -110,5 +125,52 @@ public class BatteryTest {
 
     public void setAmpHours(Integer ampHours) {
         this.ampHours = ampHours;
+    }
+
+    public Double getRatedCapacity() {
+        return ratedCapacity;
+    }
+
+    public void setRatedCapacity(Double ratedCapacity) {
+        this.ratedCapacity = ratedCapacity;
+    }
+
+    public Double getTestedCapacity() {
+        return testedCapacity;
+    }
+
+    public void setTestedCapacity(Double testedCapacity) {
+        this.testedCapacity = testedCapacity;
+    }
+
+    public String getTestTime() {
+        return testTime;
+    }
+
+    public void setTestTime(String testTime) {
+        this.testTime = testTime;
+    }
+
+    public Boolean getPass() {
+        return pass;
+    }
+
+    public void setPass(Boolean pass) {
+        this.pass = pass;
+    }
+
+    public TestType getTestType() {
+        return testType;
+    }
+
+    public void setTestType(TestType testType) {
+        this.testType = testType;
+    }
+
+    public String getPoints() {
+        return points;
+    }
+    public void setPoints(String points) {
+        this.points = points;
     }
 }

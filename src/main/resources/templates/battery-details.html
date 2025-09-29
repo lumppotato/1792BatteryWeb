@@ -3,12 +3,13 @@
 <head>
     <title>Battery Details</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<h2>Battery Details</h2>
-
+<h2 class="form-container">Battery Details</h2>
+< class="form-container">
 <div class="card">
     <p><strong>Serial Number:</strong> <span th:text="${battery.serialNumber}"></span></p>
     <p><strong>Brand:</strong> <span th:text="${battery.brand}"></span></p>
@@ -37,7 +38,7 @@
 </table>
 
 <!-- battery tests  Need to add JS charts from imported data-->
-<h3>Tests</h3>
+<h3>Short Tests</h3>
 <table>
     <thead>
     <tr>
@@ -60,7 +61,106 @@
     </tr>
     </tbody>
 </table>
+<h3 class="form-container">Tests</h3>
+<div th:each="test : ${tests}">
+    <div class="card">
+        <p><strong>Date:</strong> <span th:text="${test.testDate}"></span></p>
+        <p><strong>Rated:</strong> <span th:text="${test.ratedCapacity}"></span></p>
+        <p><strong>Tested:</strong> <span th:text="${test.testedCapacity}"></span></p>
+        <p><strong>Pass:</strong> <span th:text="${test.pass}"></span></p>
+        <p><strong>Type:</strong> <span th:text="${test.testType}"></span></p>
+        <canvas th:attr="id='chart-' + ${test.id}" width="300" height="175"></canvas>
+    </div>
+</div>
+<!-- Chart rendering -->
+<h3>Charts</h3>
+
+<div class="form-container" id="charts"></div>
+<script th:inline="javascript">
+    // Parse the injected JSON string into a real JS array
+    const tests = JSON.parse(/*[[${testsJson}]]*/ '[]');
+
+    tests.forEach(test => {
+        const points = JSON.parse(test.points || '[]');
+
+        if (points.length === 0) {
+            console.warn("No points for test", test.id);
+            return;
+        }
+
+        // Create a wrapper for each test chart
+        const wrapper = document.createElement("div");
+        wrapper.className = "chart-wrapper";
+        wrapper.innerHTML = `<h4 class="form-container">Test on ${test.testDate}</h4><canvas id="chart-${test.id}" width="800" height="400"></canvas>`;
+        document.getElementById("charts").appendChild(wrapper);
+
+        // Extract data
+        const labels = points.map(p => p.time);
+        const voltageData = points.map(p => p.voltage);
+        const currentData = points.map(p => p.current);
+
+        // Create chart
+        new Chart(document.getElementById(`chart-${test.id}`).getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Voltage (V)',
+                        data: voltageData,
+                        borderColor: 'blue',
+                        yAxisID: 'y',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Current (A)',
+                        data: currentData,
+                        borderColor: 'red',
+                        yAxisID: 'y1',
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                stacked: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: `Battery Test Results (${test.testDate})`
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Time (s)' }
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        title: { display: true, text: 'Voltage (V)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        title: { display: true, text: 'Current (A)' },
+                        grid: { drawOnChartArea: false }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
 
 <a class="btn" th:href="@{/batteries}">Back to Battery List</a>
+
+
+
+
 </body>
 </html>

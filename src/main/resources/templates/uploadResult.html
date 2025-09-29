@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload Result</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="form-container">
+<form method="post" th:action="@{/battery-tests/batteries/tests/save}">
+    <label for="batteryId">Select Battery:</label>
+    <select id="batteryId" name="batteryId" required>
+        <option th:each="bat : ${batteries}"
+                th:value="${bat.id}"
+                th:text="${bat.brand + ' (' + bat.serialNumber + ')'}"></option>
+    </select>
+
+    <!-- Hidden fields with parsed values -->
+    <input type="hidden" name="date" th:value="${date}"/>
+    <input type="hidden" name="ratedCapacity" th:value="${ratedCapacity}"/>
+    <input type="hidden" name="testedCapacity" th:value="${testedCapacity}"/>
+    <input type="hidden" name="passFail" th:value="${passFail}"/>
+    <input type="hidden" name="points" th:value="${pointsJson}"/>
+
+    <button type="submit">Save Test</button>
+</form>
+
+
+
+<h1>Upload Results</h1>
+<p>Date: <span th:text="${date}"></span></p>
+<p>Total Test Time: <span th:text="${testTime}">-</span></p>
+<p>Rated Capacity: <span th:text="${ratedCapacity}"></span></p>
+<p>Tested Capacity: <span th:text="${testedCapacity}"></span></p>
+<p>Pass/Fail: <span th:text="${passFail}"></span></p>
+
+<canvas id="chart" width="300" height="200"></canvas>
+
+<script th:inline="javascript">
+    const points = JSON.parse(/*[[${pointsJson}]]*/ '[]');
+
+    const labels = points.map(p => p.time);
+    const voltageData = points.map(p => p.voltage);
+    const currentData = points.map(p => p.current);
+
+    const ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Voltage (V)',
+                    data: voltageData,
+                    borderColor: 'blue',
+                    yAxisID: 'y',
+                    tension: 0.1
+                },
+                {
+                    label: 'Current (A)',
+                    data: currentData,
+                    borderColor: 'red',
+                    yAxisID: 'y1',
+                    tension: 0.1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            stacked: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Battery Test Results'
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time (s)'
+                    }
+                },
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Voltage (V)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Current (A)'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+</div>
+
+</body>
+</html>
