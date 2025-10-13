@@ -18,6 +18,15 @@
         <th>Event</th>
         <th>Battery</th>
         <th>Actions</th>
+<!--        <th>Test Type</th>-->
+        <th>Test Date</th>
+        <th>Voltage</th>
+        <th>Resistance</th>
+        <th>Temp</th>
+        <th>Tester</th>
+        <th>1v1</th>
+        <th>18v2</th>
+        <th>Amp Hours</th>
     </tr>
     </thead>
     <tbody>
@@ -26,6 +35,15 @@
         <td th:text="${u.robotName}"></td>
         <td th:text="${u.eventName}"></td>
         <td th:text="${u.battery.serialNumber}"></td>
+        <td th:text="${u.test?.testType ?: '—'}"></td>
+        <td th:text="${u.test?.testDate != null ? #temporals.format(u.test.testDate,'yyyy-MM-dd HH:mm') : '—'}"></td>
+        <td th:text="${u.test?.voltage ?: '—'}"></td>
+        <td th:text="${u.test?.internalResistance ?: '—'}"></td>
+        <td th:text="${u.test?.temperature ?: '—'}"></td>
+        <td th:text="${u.test?.tester ?: '—'}"></td>
+        <td th:text="${u.test?.oneV1 ?: '—'}"></td>
+        <td th:text="${u.test?.eighteenV2 ?: '—'}"></td>
+        <td th:text="${u.test?.ampHours ?: '—'}"></td>
         <td>
             <a th:href="@{'/usage/delete/' + ${u.id}}" class="btn btn-danger">Delete</a>
         </td>

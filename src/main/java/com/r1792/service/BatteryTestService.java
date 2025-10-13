@@ -4,6 +4,8 @@ import com.r1792.model.BatteryTest;
 import com.r1792.repository.BatteryTestRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,5 +25,8 @@ public class BatteryTestService {
     }
     public List<BatteryTest> getAll() {
         return repo.findAll();
+    }
+    public BatteryTest latestBeforeUsage(Long batteryId, LocalDateTime usedAt) {
+        return repo.findTopByBatteryIdAndTestDateLessThanEqualOrderByTestDateDesc(batteryId, LocalDate.from(usedAt));
     }
 }

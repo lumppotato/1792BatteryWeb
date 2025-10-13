@@ -18,6 +18,9 @@ public class BatteryUsageService {
     public List<BatteryUsage> getByBattery(Long batteryId) {
         return repo.findByBatteryId(batteryId);
     }
+    public List<BatteryUsage> getByTest(Long testId) {
+        return repo.findByTestId(testId);
+    }
 
     public BatteryUsage save(BatteryUsage usage) {
         return repo.save(usage);

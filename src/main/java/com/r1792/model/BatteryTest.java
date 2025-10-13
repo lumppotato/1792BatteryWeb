@@ -160,6 +160,8 @@ public class BatteryTest {
     }
 
     public TestType getTestType() {
+        if (testType == null) {testType = TestType.SHORT;}
+
         return testType;
     }
 

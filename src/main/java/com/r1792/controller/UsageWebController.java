@@ -1,5 +1,7 @@
 package com.r1792.controller;
 
+import com.r1792.model.BatteryTest;
+import com.r1792.service.BatteryTestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.r1792.model.Battery;
@@ -10,23 +12,29 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/usage")
 public class UsageWebController {
     private final BatteryUsageService usageService;
     private final BatteryService batteryService;
-
-    public UsageWebController(BatteryUsageService usageService, BatteryService batteryService) {
+    private final BatteryTestService testService;
+    public UsageWebController(BatteryUsageService usageService,
+                              BatteryService batteryService,
+                              BatteryTestService testService) {
         this.usageService = usageService;
         this.batteryService = batteryService;
+        this.testService = testService;
     }
 
     // Show usage logs for ALL batteries
     @GetMapping
     public String listAll(Model model) {
         List<BatteryUsage> logs = usageService.getAll();
+
         model.addAttribute("logs", logs);
         return "usage-list";
     }
@@ -34,11 +42,21 @@ public class UsageWebController {
     // Show usage logs for a specific battery
     @GetMapping("/battery/{batteryId}")
     public String listForBattery(@PathVariable Long batteryId, Model model) {
-        Battery battery = batteryService.get(batteryId);
-        List<BatteryUsage> logs = usageService.getByBattery(batteryId);
+        var battery = batteryService.get(batteryId);
+        var logs = usageService.getByBattery(batteryId);
+
+        Map<Long, BatteryTest> testsByUsage = new HashMap<>();
+        for (var u : logs) {
+            var t = testService.latestBeforeUsage(batteryId, u.getUsedDate()); // may be null
+            testsByUsage.put(u.getId(), t);
+        }
+
         model.addAttribute("battery", battery);
         model.addAttribute("logs", logs);
+        model.addAttribute("testsByUsage", testsByUsage);
         return "usage-list";
+
+
     }
     // Show add form with battery dropdown
     @GetMapping("/add")

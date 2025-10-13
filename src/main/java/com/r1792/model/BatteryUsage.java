@@ -24,6 +24,17 @@ public class BatteryUsage {
     private double runTime;
 
 
+    @ManyToOne
+    @JoinColumn(name = "test_id")
+    private BatteryTest test;
+
+    public BatteryTest getTest() {
+        return test;
+    }
+
+    public void setTest(BatteryTest test) {
+        this.test = test;
+    }
 
 
     public double getRunTime() {
@@ -73,4 +84,5 @@ public class BatteryUsage {
     public void setUsedDate(LocalDateTime usedDate) {
         this.usedDate = usedDate;
     }
+
 }
