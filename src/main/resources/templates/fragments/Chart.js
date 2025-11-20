@@ -1,5 +1,4 @@
-//chatgpt needs to be modified
-
+// Not using, using embedded JS on HTML page
 fetch(`/batteries/${batteryId}/tests/${testId}/data`)
     .then(res => res.json())
     .then(data => {
