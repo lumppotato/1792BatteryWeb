@@ -65,7 +65,7 @@ public class UsageWebController {
         model.addAttribute("batteries", batteryService.getAll());
         return "usage-form";
     }
-    // Add new usage log form
+    // usage log form
     @GetMapping("/add/{batteryId}")
     public String showAddForm(@PathVariable Long batteryId, Model model) {
         BatteryUsage usage = new BatteryUsage();
