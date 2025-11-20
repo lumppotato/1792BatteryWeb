@@ -16,3 +16,8 @@ src > main > java > com.r1792 - Main Java Folder contains the main application a
                         repository - these control what each has access to
                         service - access data for each type of model
                         tools - currently not used but was planning on using it for calculations for battery statics and rfid determinations
+
+            resources - these are the web resources
+                        static - Images and styles
+                        templates - HTML pages
+                application.properties - used to store database connection info
