@@ -164,7 +164,6 @@ public class BatteryTestController {
         Battery battery = batteryService.get(batteryId);
         IO.println("Battery got - creating test");
         BatteryTest test = new BatteryTest();
-
         IO.println("Saving test for battery " + batteryId);
         test.setBattery(battery);
         IO.println("setting date");

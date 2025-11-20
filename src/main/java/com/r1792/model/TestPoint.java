@@ -11,7 +11,7 @@ public class TestPoint {
         this.current = current;
     }
 
-    // getters
+
     public double getTime() { return time; }
     public double getVoltage() { return voltage; }
     public double getCurrent() { return current; }
