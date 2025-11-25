@@ -29,7 +29,7 @@ public class UsageWebController {
         this.batteryService = batteryService;
         this.testService = testService;
     }
-    //test
+    //test again
 
 
     // Show usage logs for ALL batteries
