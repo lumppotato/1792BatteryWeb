@@ -29,6 +29,8 @@ public class UsageWebController {
         this.batteryService = batteryService;
         this.testService = testService;
     }
+    //test
+
 
     // Show usage logs for ALL batteries
     @GetMapping
