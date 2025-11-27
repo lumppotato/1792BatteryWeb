@@ -2,6 +2,7 @@ package com.r1792.service;
 
 import com.r1792.model.User;
 import com.r1792.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,4 +41,23 @@ public class UserService {
     }
 
     public void delete(Long id) { repo.deleteById(id); }
+
+    // Automatically create default admin user
+    @PostConstruct
+    public void initDefaultAdmin() {
+        repo.findByUsername("admin").ifPresentOrElse(
+                u -> System.out.println("Admin user already exists"),
+                () -> {
+                    User admin = new User();
+                    admin.setFirstName("Admin");
+                    admin.setLastName("User");
+                    admin.setUsername("admin");
+                    admin.setRole("ADMIN");
+                    admin.setPassword(passwordEncoder.encode("admin"));
+                    repo.save(admin);
+                    System.out.println("✅ Default admin user created: admin / admin");
+                }
+        );
+    }
+
 }
