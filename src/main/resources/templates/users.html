@@ -21,9 +21,9 @@
         <td th:text="${u.username}"></td>
         <td th:text="${u.role}"></td>
         <td>
-            <button th:href="@{'/admin/users/' + ${u.id} + '/edit'}" class="btn-edit">✏️ Edit</button> |
-            <button th:href="@{'/admin/users/' + ${u.id} + '/delete'}" class="btn-delete"
-               onclick="return confirm('Delete this user?');">🗑 Delete</button>
+            <a th:href="@{'/admin/users/' + ${u.id} + '/edit'}" class="btn btn-edit">✏️ Edit</a> |
+            <a th:href="@{'/admin/users/' + ${u.id} + '/delete'}" class="btn btn-delete"
+               onclick="return confirm('Delete this user?');">🗑 Delete</a>
         </td>
     </tr>
     </tbody>

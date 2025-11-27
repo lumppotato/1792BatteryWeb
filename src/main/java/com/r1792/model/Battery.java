@@ -13,7 +13,6 @@ public class Battery {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "serial_number", unique = true, nullable = false)
     private String serialNumber;
 
