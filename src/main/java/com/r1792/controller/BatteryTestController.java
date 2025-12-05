@@ -27,6 +27,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import static com.r1792.model.BatteryTest.TestType.SHORT;
+
 @Controller
 @RequestMapping("/battery-tests")
 public class BatteryTestController {
@@ -55,12 +57,14 @@ public class BatteryTestController {
         return "battery-test-form";
     }
 
-    @PostMapping("/addbattery")
-    public String addTest(@PathVariable Long batteryId, @ModelAttribute BatteryTest batteryTest) {
+    @PostMapping("/add")
+    public String addTest(@RequestParam Long batteryId, @ModelAttribute BatteryTest batteryTest) {
         batteryTest.setBattery(batteryService.get(batteryId));
+        batteryTest.setTestType(SHORT);
         testService.save(batteryTest);
-        return "redirect:/batteries/" + batteryId + "/tests";
+        return "redirect:/batteries/" + batteryId ;
     }
+
     @GetMapping("/all")
     public String listAllTests(Model model) {
         model.addAttribute("tests", testService.getAll());
