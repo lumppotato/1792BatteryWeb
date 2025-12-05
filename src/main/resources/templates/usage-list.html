@@ -1,58 +1,205 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Battery Usage Logs</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${battery != null} ? 'Usage • ' + ${battery.serialNumber} : 'All Usage Logs'">Usage Logs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --card: #1e1e1e;
+            --blue: #0039a2;
+            --azure: #1866e1;
+            --baby-blue: #89cff0;
+            --text: #e0e0e0;
+            --danger: #d32f2f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Calibri', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 40px;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 20px 0 30px;
+            letter-spacing: 2px;
+            color: white;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-add {
+            background: var(--azure);
+            color: white;
+        }
+        .btn-add:hover { background: #005edc; transform: translateY(-2px); }
+
+        .btn-primary {
+            background: #2e7d32;
+            color: white;
+        }
+        .btn-primary:hover { background: #1b5e20; }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        .btn-danger:hover { background: #b71c1c; }
+
+        .btn-back {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #555;
+        }
+        .btn-back:hover { background: #444; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #222;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin: 25px 0;
+        }
+
+        th {
+            background: var(--blue);
+            color: white;
+            padding: 18px 16px;
+            text-align: left;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #333;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+
+        .no-logs {
+            text-align: center;
+            padding: 80px 20px;
+            color: #888;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
+
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<h2 th:if="${battery != null}" th:text="'Usage Logs for Battery ' + ${battery.serialNumber}"></h2>
-<h2 th:if="${battery == null}">All Usage Logs</h2>
-<a th:href="@{/usage/add}" class="btn btn-add">➕ Add Usage</a>
-<table>
-    <thead>
-    <tr>
-        <th>Date Used</th>
-        <th>Robot</th>
-        <th>Event</th>
-        <th>Battery</th>
-        <th>Actions</th>
-<!--        <th>Test Type</th>-->
-        <th>Test Date</th>
-        <th>Voltage</th>
-        <th>Resistance</th>
-        <th>Temp</th>
-        <th>Tester</th>
-        <th>1v1</th>
-        <th>18v2</th>
-        <th>Amp Hours</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="u : ${logs}">
-        <td th:text="${#temporals.format(u.usedDate, 'yyyy-MM-dd HH:mm')}"></td>
-        <td th:text="${u.robotName}"></td>
-        <td th:text="${u.eventName}"></td>
-        <td th:text="${u.battery.serialNumber}"></td>
-        <td th:text="${u.test?.testType ?: '—'}"></td>
-        <td th:text="${u.test?.testDate != null ? #temporals.format(u.test.testDate,'yyyy-MM-dd HH:mm') : '—'}"></td>
-        <td th:text="${u.test?.voltage ?: '—'}"></td>
-        <td th:text="${u.test?.internalResistance ?: '—'}"></td>
-        <td th:text="${u.test?.temperature ?: '—'}"></td>
-        <td th:text="${u.test?.tester ?: '—'}"></td>
-        <td th:text="${u.test?.oneV1 ?: '—'}"></td>
-        <td th:text="${u.test?.eighteenV2 ?: '—'}"></td>
-        <td th:text="${u.test?.ampHours ?: '—'}"></td>
-        <td>
-            <a th:href="@{'/usage/delete/' + ${u.id}}" class="btn btn-danger">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
 
-<div th:if="${battery != null}">
-    <a th:href="@{'/usage/add/' + ${battery.id}}" class="btn btn-primary">Add Usage</a>
+    <h1 class="page-title" th:text="${battery != null} ? 'Usage Logs • ' + ${battery.serialNumber} : 'All Usage Logs'">
+        Usage Logs
+    </h1>
+
+    <div class="header-actions">
+        <div>
+            <a th:href="@{/usage/add}" class="btn btn-add">Add Usage</a>
+            <a th:if="${battery != null}"
+               th:href="@{'/usage/add/' + ${battery.id}}"
+               class="btn btn-primary">Add Usage for This Battery</a>
+        </div>
+        <a th:href="@{/batteries}" class="btn btn-back">Back to Batteries</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Date Used</th>
+            <th>Robot</th>
+            <th>Event</th>
+            <th>Battery</th>
+            <th>Test Type</th>
+            <th>Test Date</th>
+            <th>Voltage</th>
+            <th>Resistance</th>
+            <th>Temp</th>
+            <th>Tester</th>
+            <th>1v1</th>
+            <th>18v2</th>
+            <th>Amp Hours</th>
+            <th style="text-align:center;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${logs}">
+            <td th:text="${#temporals.format(u.usedDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${u.robotName}"></td>
+            <td th:text="${u.eventName}"></td>
+            <td><strong th:text="${u.battery.serialNumber}"></strong></td>
+            <td th:text="${u.test?.testType ?: '—'}"></td>
+            <td th:text="${u.test?.testDate != null ? #temporals.format(u.test.testDate,'yyyy-MM-dd HH:mm') : '—'}"></td>
+            <td th:text="${u.test?.voltage != null ? u.test.voltage + ' V' : '—'}"></td>
+            <td th:text="${u.test?.internalResistance != null ? u.test.internalResistance + ' mΩ' : '—'}"></td>
+            <td th:text="${u.test?.temperature != null ? u.test.temperature + '°C' : '—'}"></td>
+            <td th:text="${u.test?.tester ?: '—'}"></td>
+            <td th:text="${u.test?.oneV1 != null} ? ${u.test.oneV1} : '—'"></td>
+            <td th:text="${u.test?.eighteenV2 != null} ? ${u.test.eighteenV2} : '—'"></td>
+            <td th:text="${u.test?.ampHours != null} ? ${u.test.ampHours + ' Ah'} : '—'"></td>
+            <td style="text-align:center;">
+                <a th:href="@{'/usage/delete/' + ${u.id}}"
+                   class="btn btn-danger"
+                   onclick="return confirm('Delete this usage log?')">Delete</a>
+            </td>
+        </tr>
+
+        <!-- Empty state -->
+        <tr th:if="${logs == null or #lists.isEmpty(logs)}">
+            <td colspan="14" class="no-logs">
+                No usage logs recorded yet.<br><br>
+                <a th:href="@{/usage/add}" class="btn btn-add">Add the first one</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
 </div>
 
 </body>

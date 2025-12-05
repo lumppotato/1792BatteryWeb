@@ -1,35 +1,164 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTR | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eerie-black: #1a1a1a;
+            --philippine-blue: #0039a2;
+            --royal-azure: #1866e1;
+            --baby-blue: #89cff0;
+            --cobalt-gray: #66676b;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Calibri', sans-serif;
+            background: #0f0f0f;
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--eerie-black);
+            border: 1px solid #2a2a2a;
+            max-width: 420px;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .header {
+            background: var(--philippine-blue);
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 600;
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--white);
+        }
+
+        .form-body {
+            padding: 40px;
+        }
+
+        .form-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 32px;
+            color: var(--white);
+            letter-spacing: 1.5px;
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.15);
+            color: #ff8a80;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 24px;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 20px;
+            background: #252525;
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--royal-azure);
+            background: #2c2c2c;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--royal-azure);
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #005edc;
+        }
+    </style>
 </head>
 <body>
 
-<h1>
-    <img src="/images/rtrlogo.png" height="340" width="340" />
-    <p style="color:cornflowerblue;" th:size="25">Battery Tracking</p>
-    <p style="color:cornflowerblue;" th:size="18">1792</p>
-    <p style="color:cornflowerblue;" th:size="18">Round Table Robotics</p>
+<div class="login-card">
+    <!-- Header: Logo + Title only -->
+    <div class="header">
+        <img src="/images/rtrlogo.png" alt="RTR Logo"/>
+        <h1>Battery Tracking</h1>
+    </div>
 
-</h1>
+    <!-- Login Form -->
+    <div class="form-body">
+        <h2 class="form-title">Login</h2>
 
-<h1>Login</h1>
+        <div th:if="${param.error}" class="error-message">
+            Invalid username or password
+        </div>
 
-    <h1 th:if="${param.error}">
-        <p style="color:red;">Invalid username or password</p>
-    </h1>
+        <form th:action="@{/login}" method="post">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autofocus/>
 
-<div class="form-container">
-<form th:action="@{/login}" method="post">
-    <label>Username:
-        <input type="text" name="username"/>
-    </label><br/>
-    <label>Password:
-        <input type="password" name="password"/>
-    </label><br/>
-    <button type="submit">Login</button>
-</form>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required/>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
 </div>
+
 </body>
 </html>

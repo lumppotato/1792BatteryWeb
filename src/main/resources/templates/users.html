@@ -1,33 +1,210 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>User Management</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management • Battery Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eerie-black: #1a1a1a;
+            --philippine-blue: #0039a2;
+            --royal-azure: #1866e1;
+            --baby-blue: #89cff0;
+            --cobalt-gray: #66676b;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Calibri', sans-serif;
+            background: #0f0f0f;
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        /* Navbar (keeps your fragment) */
+        .navbar {
+            background: var(--eerie-black);
+            padding: 20px 40px;
+            border-bottom: 3px solid var(--royal-azure);
+            text-align: center;
+        }
+        .navbar a {
+            color: var(--white);
+            font-family: 'Oswald', sans-serif;
+            font-size: 24px;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 40px;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 30px 0 40px;
+            letter-spacing: 2px;
+            color: var(--white);
+        }
+
+        .actions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            background: var(--royal-azure);
+            color: white;
+        }
+        .btn-add:hover { background: #005edc; transform: translateY(-2px); }
+
+        .btn-back {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #444;
+        }
+        .btn-back:hover { background: #444; }
+
+        .btn-edit {
+            background: #2e7d32;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        .btn-edit:hover { background: #1b5e20; }
+
+        .btn-delete {
+            background: #c62828;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        .btn-delete:hover { background: #b71c1c; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #222;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        th {
+            background: var(--philippine-blue);
+            color: white;
+            padding: 18px 16px;
+            text-align: left;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #333;
+            color: #e0e0e0;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .role-admin { color: #ff6b6b; font-weight: bold; }
+        .role-user { color: var(--baby-blue); }
+
+        .no-users {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
-<h1>User Management</h1>
-<p><a href="/admin/users/new" class="btn">➕ Add User</a></p>
-<table>
-    <thead>
-    <tr>
-        <th>First Name</th><th>Last Name</th><th>Username</th><th>Role</th><th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="u : ${users}">
-        <td th:text="${u.firstName}"></td>
-        <td th:text="${u.lastName}"></td>
-        <td th:text="${u.username}"></td>
-        <td th:text="${u.role}"></td>
-        <td>
-            <a th:href="@{'/admin/users/' + ${u.id} + '/edit'}" class="btn btn-edit">✏️ Edit</a> |
-            <a th:href="@{'/admin/users/' + ${u.id} + '/delete'}" class="btn btn-delete"
-               onclick="return confirm('Delete this user?');">🗑 Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<p><a href="/" class="btn">⬅ Back</a></p>
+
+<!-- Navbar Fragment -->
+<header class="navbar" th:replace="~{fragments/navbar :: navbar}">
+    <a href="/">Battery Tracker</a>
+</header>
+
+<div class="container">
+
+    <h1 class="page-title">User Management</h1>
+
+    <div class="actions-header">
+        <a th:href="@{/admin/users/new}" class="btn btn-add">Add User</a>
+        <a href="/" class="btn btn-back">Back to Dashboard</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th style="text-align: center;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${users}">
+            <td th:text="${u.firstName}">John</td>
+            <td th:text="${u.lastName}">Doe</td>
+            <td th:text="${u.username}">johndoe</td>
+            <td>
+                        <span th:text="${u.role}"
+                              th:class="${u.role} == 'ADMIN' ? 'role-admin' : 'role-user'">
+                            USER
+                        </span>
+            </td>
+            <td style="text-align: center; white-space: nowrap;">
+                <a th:href="@{'/admin/users/' + ${u.id} + '/edit'}"
+                   class="btn btn-edit">Edit</a>
+                <a th:href="@{'/admin/users/' + ${u.id} + '/delete'}"
+                   class="btn btn-delete"
+                   onclick="return confirm('Permanently delete this user?');">Delete</a>
+            </td>
+        </tr>
+
+        <!-- Empty state -->
+        <tr th:if="${users == null or #lists.isEmpty(users)}">
+            <td colspan="5" class="no-users">
+                No users found. <a th:href="@{/admin/users/new}">Create the first one</a>.
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
 </body>
 </html>

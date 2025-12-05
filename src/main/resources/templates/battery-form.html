@@ -1,38 +1,238 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
-    <title th:text="${battery.id == null} ? 'Add Battery' : 'Edit Battery'"></title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${battery.id == null ? 'Add Battery' : 'Edit Battery'} + ' • RTR Battery Tracker'"></title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eerie-black: #1a1a1a;
+            --philippine-blue: #0039a2;
+            --royal-azure: #1866e1;
+            --baby-blue: #89cff0;
+            --cobalt-gray: #66676b;
+            --white: #ffffff;
+            --bg: #0f0f0f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Calibri', sans-serif;
+            background: var(--bg);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 560px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 38px;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 20px 0 40px;
+            letter-spacing: 2px;
+            color: var(--white);
+        }
+
+        .form-card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-left: 5px solid var(--royal-azure);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .error-global {
+            background: rgba(244, 67, 54, 0.15);
+            color: #ff8a80;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 8px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--royal-azure);
+            background: #333;
+            box-shadow: 0 0 0 4px rgba(24, 102, 225, 0.15);
+        }
+
+        .field-error {
+            color: #ff8a80;
+            font-size: 14px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+
+        .hint {
+            font-size: 13px;
+            color: var(--cobalt-gray);
+            margin-top: -4px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 28px;           /* exact same padding */
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 17px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: normal;
+            border: none;                 /* important */
+            height: 56px;                 /* forces identical height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-save {
+            background: var(--royal-azure);
+            color: white;
+        }
+        .btn-save:hover {
+            background: #0066ff;
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #555;
+        }
+        .btn-back:hover {
+            background: #444;
+            border-color: #666;
+        }
+    </style>
 </head>
 <body>
+
+<!-- Your consistent navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<h2 th:text="${battery.id == null} ? 'Add Battery' : 'Edit Battery'"></h2>
-<div class="form-container">
-<form th:action="@{/batteries/save}" th:object="${battery}" method="post">
-    <input type="hidden" th:field="*{id}"/>
+<div class="container">
 
-    Serial #: <input type="text" th:field="*{serialNumber}"/><br/>
-    Brand: <input type="text" th:field="*{brand}"/><br/>
-    Capacity (mAh): <input type="number" th:field="*{capacitymAh}"/>
-    Purchase Date: <input type="date" th:field="*{purchaseDate}"/><br/>
-    Entered Service: <input type="date" th:field="*{enteredService}"/><br/>
-    Status:
-    <select th:field="*{status}">
-        <option value="NEW">NEW</option>
-        <option value="GOOD">GOOD</option>
-        <option value="DEAD">DEAD</option>
-        <option value="RETIRED">RETIRED</option>
-    </select><br/>
-    Usage:
-    <select th:field="*{usage}">
-        <option value="Competition">Competition</option>
-        <option value="Testing">Testing</option>
-    </select><br/>
-    RFID Tag: <input type="number" th:field="*{rfidTag}"/><br/>
+    <h1 class="page-title"
+        th:text="${battery.id == null ? 'Add Battery' : 'Edit Battery'}">
+        Add Battery
+    </h1>
 
-    <button type="submit" class="btn">Save</button>
-</form>
+    <div class="form-card">
+
+        <!-- Global error (e.g. duplicate serial number) -->
+        <div th:if="${error != null}" class="error-global" th:text="${error}">
+            This serial number is already in use!
+        </div>
+
+        <form th:action="@{/batteries/save}" th:object="${battery}" method="post">
+
+            <input type="hidden" th:field="*{id}"/>
+
+            <!-- Serial Number -->
+            <label for="serial">Serial Number</label>
+            <input type="text" id="serial" th:field="*{serialNumber}" required autofocus/>
+            <div class="field-error" th:if="${#fields.hasErrors('serialNumber')}" th:errors="*{serialNumber}">Error</div>
+
+            <!-- Brand -->
+            <label for="brand">Brand</label>
+            <input type="text" id="brand" th:field="*{brand}" required/>
+            <div class="field-error" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}">Error</div>
+
+            <!-- Capacity -->
+            <label for="capacity">Capacity (mAh)</label>
+            <input type="number" id="capacity" th:field="*{capacitymAh}" min="1" required/>
+            <div class="field-error" th:if="${#fields.hasErrors('capacitymAh')}" th:errors="*{capacitymAh}">Error</div>
+
+            <!-- Purchase Date -->
+            <label for="purchase">Purchase Date</label>
+            <input type="date" id="purchase" th:field="*{purchaseDate}"/>
+            <div class="field-error" th:if="${#fields.hasErrors('purchaseDate')}" th:errors="*{purchaseDate}">Error</div>
+
+            <!-- Entered Service -->
+            <label for="service">Entered Service Date</label>
+            <input type="date" id="service" th:field="*{enteredService}"/>
+            <div class="field-error" th:if="${#fields.hasErrors('enteredService')}" th:errors="*{enteredService}">Error</div>
+
+            <!-- Status -->
+            <label for="status">Status</label>
+            <select id="status" th:field="*{status}" required>
+                <option value="">-- Select Status --</option>
+                <option value="NEW">NEW</option>
+                <option value="GOOD">GOOD</option>
+                <option value="DEAD">DEAD</option>
+                <option value="RETIRED">RETIRED</option>
+            </select>
+            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Error</div>
+
+            <!-- Usage Type -->
+            <label for="usage">Usage Type</label>
+            <select id="usage" th:field="*{usage}" required>
+                <option value="">-- Select Usage --</option>
+                <option value="Competition">Competition</option>
+                <option value="Testing">Testing</option>
+            </select>
+            <div class="field-error" th:if="${#fields.hasErrors('usage')}" th:errors="*{usage}">Error</div>
+
+            <!-- RFID Tag -->
+            <label for="rfid">RFID Tag (optional)</label>
+            <input type="text" id="rfid" th:field="*{rfidTag}" placeholder="e.g. 1234567890"/>
+            <div class="field-error" th:if="${#fields.hasErrors('rfidTag')}" th:errors="*{rfidTag}">Error</div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-save">Save Battery</button>
+                <a th:href="@{/batteries}" class="btn btn-back">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
+
 </body>
 </html>

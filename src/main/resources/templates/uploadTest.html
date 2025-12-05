@@ -1,18 +1,254 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
-    <title>Upload Battery Test</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Battery Test CSV • RTR Battery Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eerie-black: #1a1a1a;
+            --philippine-blue: #0039a2;
+            --royal-azure: #1866e1;
+            --baby-blue: #89cff0;
+            --cobalt-gray: #66676b;
+            --white: #ffffff;
+            --bg: #0f0f0f;
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Calibri', sans-serif;
+            background: var(--bg);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 560px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 38px;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 20px 0 40px;
+            letter-spacing: 2px;
+            color: var(--white);
+        }
+
+        .form-card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-left: 5px solid var(--royal-azure);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .upload-area {
+            border: 3px dashed #444;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: #252525;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--royal-azure);
+            background: #2a2a2a;
+        }
+
+        .upload-area.dragover {
+            border-color: var(--baby-blue);
+            background: rgba(137, 207, 240, 0.1);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: block;
+            padding: 20px;
+            background: var(--royal-azure);
+            color: white;
+            border-radius: 8px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            background: #005edc;
+            transform: translateY(-2px);
+        }
+
+        .file-name {
+            margin-top: 20px;
+            color: var(--baby-blue);
+            font-size: 16px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 17px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .btn-upload {
+            background: #2e7d32;
+            color: white;
+        }
+        .btn-upload:hover {
+            background: #1b5e20;
+            transform: translateY(-2px);
+        }
+
+        .btn-upload:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-back {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #555;
+        }
+        .btn-back:hover {
+            background: #444;
+            border-color: #666;
+        }
+
+        .success-message, .error-message {
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success-message { background: rgba(76, 175, 80, 0.2); color: #69f0ae; border: 1px solid #2e7d32; }
+        .error-message   { background: rgba(244, 67, 54, 0.2); color: #ff8a80; border: 1px solid #c62828; }
+    </style>
 </head>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
 <body>
-<h2>Upload Battery Test CSV (Under development)</h2>
-<div class="form-container">
-<form th:action="@{/battery-tests/upload}" method="post" enctype="multipart/form-data">
-    <input type="file" name="file"/>
-    <button type="submit">Upload</button>
-</form>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+
+    <h1 class="page-title">Upload Battery Test CSV</h1>
+
+    <div class="form-card">
+
+        <!-- Success/Error messages -->
+        <div th:if="${success != null}" class="success-message" th:text="${success}">
+            Upload successful!
+        </div>
+        <div th:if="${error != null}" class="error-message" th:text="${error}">
+            Upload failed!
+        </div>
+
+        <form th:action="@{/battery-tests/upload}" method="post" enctype="multipart/form-data" id="uploadForm">
+
+            <div class="upload-area" id="dropArea">
+                <label for="file" class="file-label">Choose CSV File or Drag & Drop</label>
+                <input type="file" name="file" id="file" accept=".csv" required />
+                <div class="file-name" id="fileName">No file selected</div>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-upload" id="uploadBtn" disabled>Upload CSV</button>
+                <a th:href="@{/battery-tests/all}" class="btn btn-back">Cancel</a>
+            </div>
+        </form>
+
+        <div style="margin-top: 30px; font-size: 14px; color: #888; text-align: center;">
+            Supported format: CSV with columns matching battery test fields<br>
+            (Serial Number, Test Date, Voltage, Resistance, etc.)
+        </div>
+    </div>
 </div>
+
+<script>
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('file');
+    const fileName = document.getElementById('fileName');
+    const uploadBtn = document.getElementById('uploadBtn');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'), false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'), false);
+    });
+
+    dropArea.addEventListener('drop', handleDrop, false);
+    fileInput.addEventListener('change', handleFileSelect, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    function handleFileSelect(e) {
+        handleFiles(e.target.files);
+    }
+
+    function handleFiles(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.name.toLowerCase().endsWith('.csv')) {
+                fileName.textContent = file.name;
+                uploadBtn.disabled = false;
+            } else {
+                fileName.textContent = "Please select a CSV file";
+                uploadBtn.disabled = true;
+            }
+        }
+    }
+</script>
+
 </body>
 </html>

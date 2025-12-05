@@ -1,117 +1,120 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Upload Result</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long Test Result • RTR Battery Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg:#0f0f0f; --card:#1e1e1e; --azure:#1866e1; --text:#e0e0e0; --success:#69f0ae; --fail:#ff6b6b; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Calibri',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+        .container { max-width:1000px; margin:40px auto; padding:0 20px; }
+        .page-title { font-family:'Oswald',sans-serif; font-size:40px; text-transform:uppercase; text-align:center; margin:20px 0 40px; letter-spacing:2px; color:white; }
+        .card { background:var(--card); border:1px solid #333; border-left:5px solid var(--azure); border-radius:16px; padding:32px; margin-bottom:30px; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+        .card h3 { font-family:'Oswald',sans-serif; font-size:26px; color:#89cff0; margin-bottom:20px; text-transform:uppercase; letter-spacing:1.2px; }
+        .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-bottom:30px; }
+        .summary-item strong { color:#89cff0; display:inline-block; width:160px; }
+        .pass-fail { font-size:32px; font-weight:bold; text-transform:uppercase; }
+        .chart-wrapper { background:#181818; border-radius:12px; padding:24px; margin-top:20px; }
+        canvas { max-width:100%; height:auto !important; }
+        label { display:block; margin:20px 0 10px; font-weight:bold; color:#e0e0e0; font-size:16px; }
+        select { width:100%; padding:16px; background:#2a2a2a; border:2px solid #444; border-radius:8px; color:white; font-size:16px; }
+        select:focus { outline:none; border-color:var(--azure); box-shadow:0 0 0 4px rgba(24,102,225,0.15); }
+        .btn-group { display:flex; gap:16px; margin-top:30px; }
+        .btn { flex:1; padding:16px 28px; border-radius:8px; font-family:'Oswald',sans-serif; font-size:17px; text-transform:uppercase; letter-spacing:1.2px; font-weight:600; text-align:center; cursor:pointer; height:56px; display:flex; align-items:center; justify-content:center; border:none; transition:all .3s; }
+        .btn-save { background:#2e7d32; color:white; }
+        .btn-save:hover { background:#1b5e20; transform:translateY(-2px); }
+        .btn-cancel { background:#333; color:#ccc; border:1px solid #555; }
+        .btn-cancel:hover { background:#444; }
+    </style>
 </head>
 <body>
+
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-<div class="form-container">
-<form method="post" th:action="@{/battery-tests/batteries/tests/save}">
-    <label for="batteryId">Select Battery:</label>
-    <select id="batteryId" name="batteryId" required>
-        <option th:each="bat : ${batteries}"
-                th:value="${bat.id}"
-                th:text="${bat.brand + ' (' + bat.serialNumber + ')'}"></option>
-    </select>
 
-    <!-- Hidden fields with parsed values -->
-    <input type="hidden" name="date" th:value="${date}"/>
-    <input type="hidden" name="ratedCapacity" th:value="${ratedCapacity}"/>
-    <input type="hidden" name="testedCapacity" th:value="${testedCapacity}"/>
-    <input type="hidden" name="passFail" th:value="${passFail}"/>
-    <input type="hidden" name="points" th:value="${pointsJson}"/>
+<div class="container">
+    <h1 class="page-title">Long Test Results</h1>
 
-    <button type="submit">Save Test</button>
-</form>
+    <!-- Summary Card -->
+    <div class="card">
+        <h3>Test Summary</h3>
+        <div class="summary-grid">
 
+            <!-- 100% SAFE date display – works with ANY date type (String, LocalDateTime, Date, null) -->
+            <div class="summary-item"><strong>Date:</strong>
+                <span th:text="${date}
+                    ? (${#strings.contains(date, 'T')}
+                        ? ${#strings.replace(#strings.replace(date, 'T', ' • '), '-', ' ')}
+                        : ${#strings.replace(date, '-', ' ')})
+                    : '—'">2025 12 02 • 14:30</span>
+            </div>
 
+            <div class="summary-item"><strong>Test Time:</strong> <span th:text="${testTime}">2h 34m</span></div>
+            <div class="summary-item"><strong>Rated:</strong> <span th:text="${ratedCapacity} + ' mAh'">5000 mAh</span></div>
+            <div class="summary-item"><strong>Tested:</strong> <span th:text="${testedCapacity} + ' mAh'">4820 mAh</span></div>
+            <div class="summary-item"><strong>Result:</strong>
+                <span class="pass-fail"
+                      th:style="${passFail} ? 'color:#69f0ae' : 'color:#ff6b6b'"
+                      th:text="${passFail} ? 'PASS' : 'FAIL'">PASS</span>
+            </div>
+        </div>
 
-<h1>Upload Results</h1>
-<p>Date: <span th:text="${date}"></span></p>
-<p>Total Test Time: <span th:text="${testTime}">-</span></p>
-<p>Rated Capacity: <span th:text="${ratedCapacity}"></span></p>
-<p>Tested Capacity: <span th:text="${testedCapacity}"></span></p>
-<p>Pass/Fail: <span th:text="${passFail}"></span></p>
+        <div class="chart-wrapper">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
 
-<canvas id="chart" width="300" height="200"></canvas>
+    <!-- Save Form Card -->
+    <div class="card">
+        <h3>Assign to Battery & Save</h3>
+
+        <form method="post" th:action="@{/battery-tests/batteries/tests/save}">
+            <label for="batteryId">Select Battery</label>
+            <select id="batteryId" name="batteryId" required>
+                <option value="">-- Choose Battery --</option>
+                <option th:each="bat : ${batteries}"
+                        th:value="${bat.id}"
+                        th:text="${bat.brand} + ' – ' + ${bat.serialNumber} + ' (' + ${bat.capacitymAh} + ' mAh)'"></option>
+            </select>
+
+            <input type="hidden" name="date" th:value="${date}"/>
+            <input type="hidden" name="ratedCapacity" th:value="${ratedCapacity}"/>
+            <input type="hidden" name="testedCapacity" th:value="${testedCapacity}"/>
+            <input type="hidden" name="passFail" th:value="${passFail}"/>
+            <input type="hidden" name="points" th:value="${pointsJson}"/>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-save">Save Long Test</button>
+                <a th:href="@{/battery-tests/all}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script th:inline="javascript">
     const points = JSON.parse(/*[[${pointsJson}]]*/ '[]');
-
-    const labels = points.map(p => p.time);
-    const voltageData = points.map(p => p.voltage);
-    const currentData = points.map(p => p.current);
-
-    const ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, {
+    new Chart(document.getElementById('chart'), {
         type: 'line',
         data: {
-            labels: labels,
+            labels: points.map(p => p.time),
             datasets: [
-                {
-                    label: 'Voltage (V)',
-                    data: voltageData,
-                    borderColor: 'blue',
-                    yAxisID: 'y',
-                    tension: 0.1
-                },
-                {
-                    label: 'Current (A)',
-                    data: currentData,
-                    borderColor: 'red',
-                    yAxisID: 'y1',
-                    tension: 0.1
-                }
+                { label: 'Voltage (V)', data: points.map(p => p.voltage), borderColor: '#89cff0', backgroundColor: 'rgba(137,207,240,0.1)', yAxisID: 'y', tension: 0.2, pointRadius: 0 },
+                { label: 'Current (A)', data: points.map(p => p.current), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.1)', yAxisID: 'y1', tension: 0.2, pointRadius: 0 }
             ]
         },
         options: {
             responsive: true,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            stacked: false,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Battery Test Results'
-                }
-            },
+            plugins: { title: { display: true, text: 'Full Discharge Curve', font: { size: 18 } } },
             scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Time (s)'
-                    }
-                },
-                y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    title: {
-                        display: true,
-                        text: 'Voltage (V)'
-                    }
-                },
-                y1: {
-                    type: 'linear',
-                    display: true,
-                    position: 'right',
-                    title: {
-                        display: true,
-                        text: 'Current (A)'
-                    },
-                    grid: {
-                        drawOnChartArea: false
-                    }
-                }
+                x: { title: { display: true, text: 'Time (seconds)' } },
+                y: { position: 'left', title: { display: true, text: 'Voltage (V)' } },
+                y1: { position: 'right', title: { display: true, text: 'Current (A)' }, grid: { drawOnChartArea: false } }
             }
         }
     });
 </script>
-</div>
 
 </body>
 </html>
