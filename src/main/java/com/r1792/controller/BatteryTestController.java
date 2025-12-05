@@ -9,6 +9,7 @@ import com.r1792.service.BatteryTestCompressor;
 import com.r1792.service.BatteryTestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,6 +62,20 @@ public class BatteryTestController {
         testService.save(batteryTest);
         return "redirect:/batteries/" + batteryId + "/tests";
     }
+
+    @PostMapping("/add")
+    public String saveTest( @ModelAttribute("test") BatteryTest test,
+                           BindingResult result,
+                           Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("batteries", batteryService.getAll());
+            return "battery-tests/add"; // redisplay form with errors
+        }
+
+        testService.save(test);
+        return "redirect:/battery-tests/all"; // or wherever you want
+    }
+
     @GetMapping("/all")
     public String listAllTests(Model model) {
         model.addAttribute("tests", testService.getAll());

@@ -95,5 +95,11 @@ public class BatteryWebController {
         service.save(battery);
         return "redirect:/batteries";
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
+        return "redirect:/batteries";
+    }
 }
 

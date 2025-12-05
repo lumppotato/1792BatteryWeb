@@ -1,33 +1,217 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
-    <title>Add Battery Test</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Battery Test • RTR Battery Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eerie-black: #1a1a1a;
+            --philippine-blue: #0039a2;
+            --royal-azure: #1866e1;
+            --baby-blue: #89cff0;
+            --cobalt-gray: #66676b;
+            --white: #ffffff;
+            --bg: #0f0f0f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Calibri', sans-serif;
+            background: var(--bg);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 560px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 38px;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 20px 0 40px;
+            letter-spacing: 2px;
+            color: var(--white);
+        }
+
+        .form-card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-left: 5px solid var(--royal-azure);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .error-global {
+            background: rgba(244, 67, 54, 0.15);
+            color: #ff8a80;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 8px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--royal-azure);
+            background: #333;
+            box-shadow: 0 0 0 4px rgba(24, 102, 225, 0.15);
+        }
+
+        .field-error {
+            color: #ff8a80;
+            font-size: 14px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 17px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .btn-save {
+            background: var(--royal-azure);
+            color: white;
+        }
+        .btn-save:hover {
+            background: #0066ff;
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #555;
+        }
+        .btn-back:hover {
+            background: #444;
+            border-color: #666;
+        }
+    </style>
 </head>
 <body>
+
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<h2>Add Test</h2>
-<div class="form-container">
-<form th:action="@{/battery-tests/add}"
-      th:object="${test}" method="post">
-    <label>Battery:</label>
-    <select th:field="*{battery}">
-        <option th:each="b : ${batteries}"
-                th:value="${b}"
-                th:text="${b.serialNumber} + ' (' + ${b.brand} + ')'">
-        </option>
-    </select>
-    Voltage: <input type="number" step="0.01" th:field="*{voltage}"/><br/>
-    Resistance: <input type="number" step="0.01" th:field="*{internalResistance}"/><br/>
-    Temperature: <input type="number" step="0.01" th:field="*{temperature}"/><br/>
-    Tester: <input type="text" th:field="*{tester}"/><br/>
-    1v1: <input type="number" th:field="*{oneV1}"/><br/>
-    18v2: <input type="number" th:field="*{eighteenV2}"/><br/>
-    Amp Hours: <input type="number" th:field="*{ampHours}"/><br/>
+<div class="container">
 
-    <button type="submit" class="btn">Save</button>
-</form>
+    <h1 class="page-title">Add Battery Test</h1>
+
+    <div class="form-card">
+
+        <!-- Global error (e.g. from controller) -->
+        <div th:if="${error != null}" class="error-global" th:text="${error}">
+            Something went wrong. Please try again.
+        </div>
+
+        <form th:action="@{/batteries/tests/add}" th:object="${test}" method="post">
+
+            <!-- Battery Selection -->
+            <label for="battery">Battery</label>
+            <select id="battery" th:field="*{battery}" required>
+                <option value="">-- Select Battery --</option>
+                <option th:each="b : ${batteries}"
+                        th:value="${b.id}"
+                        th:text="${b.serialNumber} + ' (' + ${b.brand} + ', ' + ${b.capacitymAh} + ' mAh)'">
+                </option>
+            </select>
+            <div class="field-error" th:if="${#fields.hasErrors('battery')}" th:errors="*{battery}">Required</div>
+
+            <!-- Voltage -->
+            <label for="voltage">Voltage (V)</label>
+            <input type="number" step="0.01" id="voltage" th:field="*{voltage}" required/>
+            <div class="field-error" th:if="${#fields.hasErrors('voltage')}" th:errors="*{voltage}">Invalid value</div>
+
+            <!-- Internal Resistance -->
+            <label for="resistance">Internal Resistance (mΩ)</label>
+            <input type="number" step="0.01" id="resistance" th:field="*{internalResistance}"/>
+            <div class="field-error" th:if="${#fields.hasErrors('internalResistance')}" th:errors="*{internalResistance}">Invalid</div>
+
+            <!-- Temperature -->
+            <label for="temp">Temperature (°C)</label>
+            <input type="number" step="0.1" id="temp" th:field="*{temperature}"/>
+            <div class="field-error" th:if="${#fields.hasErrors('temperature')}" th:errors="*{temperature}">Invalid</div>
+
+            <!-- Tester -->
+            <label for="tester">Tester Name</label>
+            <input type="text" id="tester" th:field="*{tester}" required/>
+            <div class="field-error" th:if="${#fields.hasErrors('tester')}" th:errors="*{tester}">Required</div>
+
+            <!-- 1v1 & 18v2 -->
+            <label for="oneV1">1v1 Rating</label>
+            <input type="number" id="oneV1" th:field="*{oneV1}"/>
+            <div class="field-error" th:if="${#fields.hasErrors('oneV1')}" th:errors="*{oneV1}">Invalid</div>
+
+            <label for="eighteenV2">18v2 Rating</label>
+            <input type="number" id="eighteenV2" th:field="*{eighteenV2}"/>
+            <div class="field-error" th:if="${#fields.hasErrors('eighteenV2')}" th:errors="*{eighteenV2}">Invalid</div>
+
+            <!-- Amp Hours -->
+            <label for="ampHours">Measured Amp Hours (Ah)</label>
+            <input type="number" step="0.01" id="ampHours" th:field="*{ampHours}"/>
+            <div class="field-error" th:if="${#fields.hasErrors('ampHours')}" th:errors="*{ampHours}">Invalid</div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-save">Save Test</button>
+                <a th:href="@{/battery-tests/all}" class="btn btn-back">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
+
 </body>
 </html>
