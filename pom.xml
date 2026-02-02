@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>4.0.2</version>
+        <relativePath/>
     </parent>
     <groupId>com.r1792</groupId>
-    <artifactId>_1792</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>rtr1792</artifactId>
+    <version>0.0.1</version>
     <packaging>war</packaging>
     <name>1792BatteryWeb</name>
     <description>1792BatteryWeb</description>

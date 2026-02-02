@@ -5,150 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management • Battery Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --eerie-black: #1a1a1a;
-            --philippine-blue: #0039a2;
-            --royal-azure: #1866e1;
-            --baby-blue: #89cff0;
-            --cobalt-gray: #66676b;
-            --white: #ffffff;
-        }
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Calibri', sans-serif;
-            background: #0f0f0f;
-            color: var(--white);
-            min-height: 100vh;
-        }
+    <!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;eerie-black: #1a1a1a;-->
+<!--            &#45;&#45;philippine-blue: #0039a2;-->
+<!--            &#45;&#45;royal-azure: #1866e1;-->
+<!--            &#45;&#45;baby-blue: #89cff0;-->
+<!--            &#45;&#45;cobalt-gray: #66676b;-->
+<!--            &#45;&#45;white: #ffffff;-->
+<!--        }-->
 
-        /* Navbar (keeps your fragment) */
-        .navbar {
-            background: var(--eerie-black);
-            padding: 20px 40px;
-            border-bottom: 3px solid var(--royal-azure);
-            text-align: center;
-        }
-        .navbar a {
-            color: var(--white);
-            font-family: 'Oswald', sans-serif;
-            font-size: 24px;
-            text-transform: uppercase;
-            text-decoration: none;
-            letter-spacing: 1px;
-        }
+<!--        * { margin: 0; padding: 0; box-sizing: border-box; }-->
+<!--        body {-->
+<!--            font-family: 'Calibri', sans-serif;-->
+<!--            background: #0f0f0f;-->
+<!--            color: var(&#45;&#45;white);-->
+<!--            min-height: 100vh;-->
+<!--        }-->
 
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+<!--        /* Navbar (keeps your fragment) */-->
+<!--        .navbar {-->
+<!--            background: var(&#45;&#45;eerie-black);-->
+<!--            padding: 20px 40px;-->
+<!--            border-bottom: 3px solid var(&#45;&#45;royal-azure);-->
+<!--            text-align: center;-->
+<!--        }-->
+<!--        .navbar a {-->
+<!--            color: var(&#45;&#45;white);-->
+<!--            font-family: 'Oswald', sans-serif;-->
+<!--            font-size: 24px;-->
+<!--            text-transform: uppercase;-->
+<!--            text-decoration: none;-->
+<!--            letter-spacing: 1px;-->
+<!--        }-->
 
-        .page-title {
-            font-family: 'Oswald', sans-serif;
-            font-size: 40px;
-            text-transform: uppercase;
-            text-align: center;
-            margin: 30px 0 40px;
-            letter-spacing: 2px;
-            color: var(--white);
-        }
+<!--        .container {-->
+<!--            max-width: 1100px;-->
+<!--            margin: 40px auto;-->
+<!--            padding: 0 20px;-->
+<!--        }-->
 
-        .actions-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
+<!--        .page-title {-->
+<!--            font-family: 'Oswald', sans-serif;-->
+<!--            font-size: 40px;-->
+<!--            text-transform: uppercase;-->
+<!--            text-align: center;-->
+<!--            margin: 30px 0 40px;-->
+<!--            letter-spacing: 2px;-->
+<!--            color: var(&#45;&#45;white);-->
+<!--        }-->
 
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-family: 'Oswald', sans-serif;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
+<!--        .actions-header {-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--            align-items: center;-->
+<!--            margin-bottom: 24px;-->
+<!--        }-->
 
-        .btn-add {
-            background: var(--royal-azure);
-            color: white;
-        }
-        .btn-add:hover { background: #005edc; transform: translateY(-2px); }
+<!--        .btn {-->
+<!--            display: inline-block;-->
+<!--            padding: 12px 24px;-->
+<!--            border-radius: 8px;-->
+<!--            text-decoration: none;-->
+<!--            font-family: 'Oswald', sans-serif;-->
+<!--            font-size: 16px;-->
+<!--            text-transform: uppercase;-->
+<!--            letter-spacing: 1px;-->
+<!--            font-weight: 600;-->
+<!--            transition: all 0.3s;-->
+<!--            cursor: pointer;-->
+<!--        }-->
 
-        .btn-back {
-            background: #333;
-            color: #ccc;
-            border: 1px solid #444;
-        }
-        .btn-back:hover { background: #444; }
+<!--        .btn-add {-->
+<!--            background: var(&#45;&#45;royal-azure);-->
+<!--            color: white;-->
+<!--        }-->
+<!--        .btn-add:hover { background: #005edc; transform: translateY(-2px); }-->
 
-        .btn-edit {
-            background: #2e7d32;
-            color: white;
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-        .btn-edit:hover { background: #1b5e20; }
+<!--        .btn-back {-->
+<!--            background: #333;-->
+<!--            color: #ccc;-->
+<!--            border: 1px solid #444;-->
+<!--        }-->
+<!--        .btn-back:hover { background: #444; }-->
 
-        .btn-delete {
-            background: #c62828;
-            color: white;
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-        .btn-delete:hover { background: #b71c1c; }
+<!--        .btn-edit {-->
+<!--            background: #2e7d32;-->
+<!--            color: white;-->
+<!--            padding: 8px 16px;-->
+<!--            font-size: 14px;-->
+<!--        }-->
+<!--        .btn-edit:hover { background: #1b5e20; }-->
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #222;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+<!--        .btn-delete {-->
+<!--            background: #c62828;-->
+<!--            color: white;-->
+<!--            padding: 8px 16px;-->
+<!--            font-size: 14px;-->
+<!--        }-->
+<!--        .btn-delete:hover { background: #b71c1c; }-->
 
-        th {
-            background: var(--philippine-blue);
-            color: white;
-            padding: 18px 16px;
-            text-align: left;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            font-size: 15px;
-            letter-spacing: 1px;
-        }
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--            background: #222;-->
+<!--            border-radius: 12px;-->
+<!--            overflow: hidden;-->
+<!--            box-shadow: 0 10px 30px rgba(0,0,0,0.5);-->
+<!--        }-->
 
-        td {
-            padding: 16px;
-            border-bottom: 1px solid #333;
-            color: #e0e0e0;
-        }
+<!--        th {-->
+<!--            background: var(&#45;&#45;philippine-blue);-->
+<!--            color: white;-->
+<!--            padding: 18px 16px;-->
+<!--            text-align: left;-->
+<!--            font-family: 'Oswald', sans-serif;-->
+<!--            text-transform: uppercase;-->
+<!--            font-size: 15px;-->
+<!--            letter-spacing: 1px;-->
+<!--        }-->
 
-        tr:hover {
-            background: #2a2a2a;
-        }
+<!--        td {-->
+<!--            padding: 16px;-->
+<!--            border-bottom: 1px solid #333;-->
+<!--            color: #e0e0e0;-->
+<!--        }-->
 
-        tr:last-child td {
-            border-bottom: none;
-        }
+<!--        tr:hover {-->
+<!--            background: #2a2a2a;-->
+<!--        }-->
 
-        .role-admin { color: #ff6b6b; font-weight: bold; }
-        .role-user { color: var(--baby-blue); }
+<!--        tr:last-child td {-->
+<!--            border-bottom: none;-->
+<!--        }-->
 
-        .no-users {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-            font-size: 18px;
-        }
-    </style>
+<!--        .role-admin { color: #ff6b6b; font-weight: bold; }-->
+<!--        .role-user { color: var(&#45;&#45;baby-blue); }-->
+
+<!--        .no-users {-->
+<!--            text-align: center;-->
+<!--            padding: 60px 20px;-->
+<!--            color: #888;-->
+<!--            font-size: 18px;-->
+<!--        }-->
+<!--    </style>-->
 </head>
 <body>
 

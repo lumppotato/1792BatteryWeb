@@ -1,6 +1,6 @@
 package com.r1792.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 import com.r1792.model.Battery;
 import com.r1792.model.BatteryUsage;
 import com.r1792.service.BatteryService;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.r1792.model.BatteryTest;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.Serializable;
 import java.util.HashMap;
