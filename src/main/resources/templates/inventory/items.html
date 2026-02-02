@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Inventory Items</h2>
+
+<table>
+    <tr><th>Code</th><th>Name</th><th>Type</th></tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.code}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${item.type}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

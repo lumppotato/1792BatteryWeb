@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Receive Stock</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div style="max-width:600px;margin:20px auto;color:#eee;">
+    <h2>Receive Stock</h2>
+
+    <form th:action="@{/inventory/receive}" method="post">
+        <div style="margin-bottom:10px;">
+            <label>Item</label><br/>
+            <select name="itemId" style="width:100%;padding:6px;">
+                <option value="">-- select item --</option>
+                <option th:each="item : ${items}"
+                        th:value="${item.id}"
+                        th:text="${item.partNumber + ' — ' + item.name}">
+                </option>
+            </select>
+        </div>
+
+        <div style="margin-bottom:10px;">
+            <label>Location</label><br/>
+            <select name="locationId" style="width:100%;padding:6px;">
+                <option value="">-- select location --</option>
+                <option th:each="loc : ${locations}"
+                        th:value="${loc.id}"
+                        th:text="${loc.name}">
+                </option>
+            </select>
+        </div>
+
+        <div style="margin-bottom:10px;">
+            <label>Quantity</label><br/>
+            <input type="number" step="1" min="0" name="quantity"
+                   style="width:100%;padding:6px;"/>
+        </div>
+
+        <div style="margin-bottom:10px;">
+            <label>Reference (PO / note)</label><br/>
+            <input type="text" name="reference" style="width:100%;padding:6px;"/>
+        </div>
+
+        <button type="submit"
+                style="background:#4caf50;color:white;padding:8px 16px;border:none;border-radius:4px;">
+            Receive
+        </button>
+    </form>
+</div>
+</body>
+</html>

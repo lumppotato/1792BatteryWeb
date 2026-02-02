@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Import BOM • Onshape • Battery Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Navbar -->
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<div class="container">
+    <h1 class="page-title">Onshape BOM Import</h1>
+
+    <!-- Form card -->
+    <div class="form-card">
+        <h2 style="margin-bottom:10px;">Fetch BOM from Onshape</h2>
+        <p style="margin-bottom:20px; color:#ccc;">
+            Paste the Document ID, Workspace ID, and Element ID for your robot assembly.
+        </p>
+
+        <form th:action="@{/onshape/import-bom}" th:object="${bomForm}" method="post">
+            <label for="documentId">Document ID (DID)</label>
+            <input type="text" id="documentId" th:field="*{documentId}" required>
+
+            <label for="workspaceId">Workspace ID (WID)</label>
+            <input type="text" id="workspaceId" th:field="*{workspaceId}" required>
+
+            <label for="elementId">Element ID (EID)</label>
+            <input type="text" id="elementId" th:field="*{elementId}" required>
+
+            <button type="submit">Fetch BOM</button>
+        </form>
+
+        <div th:if="${errorMessage != null}"
+             style="margin-top:15px; color:#ff8a80; font-weight:bold;"
+             th:text="${errorMessage}">
+            Error goes here
+        </div>
+    </div>
+
+    <!-- Results table -->
+    <div th:if="${bomItems != null}">
+        <h2 style="margin-top:30px;">Aggregated BOM</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Qty</th>
+                <th>Part Number</th>
+                <th>Name / Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${bomItems}">
+                <td th:text="${item.totalQty}">1.0</td>
+                <td th:text="${item.partNumber}">217-2734</td>
+                <td th:text="${item.name}">.5" Hex ID 1.125" OD Flanged Bearing</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

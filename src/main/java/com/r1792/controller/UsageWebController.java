@@ -1,14 +1,12 @@
 package com.r1792.controller;
 
-import com.r1792.model.BatteryTest;
-import com.r1792.service.BatteryTestService;
+import com.r1792.model.batteries.BatteryTest;
+import com.r1792.service.batteries.BatteryTestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.r1792.model.Battery;
-import com.r1792.model.BatteryUsage;
-import com.r1792.service.BatteryService;
-import com.r1792.service.BatteryUsageService;
-import org.springframework.stereotype.Controller;
+import com.r1792.model.batteries.BatteryUsage;
+import com.r1792.service.batteries.BatteryService;
+import com.r1792.service.batteries.BatteryUsageService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +36,7 @@ public class UsageWebController {
         List<BatteryUsage> logs = usageService.getAll();
 
         model.addAttribute("logs", logs);
-        return "usage-list";
+        return "batteries/usage-list";
     }
 
     // Show usage logs for a specific battery
@@ -56,7 +54,7 @@ public class UsageWebController {
         model.addAttribute("battery", battery);
         model.addAttribute("logs", logs);
         model.addAttribute("testsByUsage", testsByUsage);
-        return "usage-list";
+        return "batteries/usage-list";
 
 
     }
@@ -65,7 +63,7 @@ public class UsageWebController {
     public String showGenericAddForm(Model model) {
         model.addAttribute("usage", new BatteryUsage());
         model.addAttribute("batteries", batteryService.getAll());
-        return "usage-form";
+        return "batteries/usage-form";
     }
     // usage log form
     @GetMapping("/add/{batteryId}")
@@ -73,7 +71,7 @@ public class UsageWebController {
         BatteryUsage usage = new BatteryUsage();
         usage.setBattery(batteryService.get(batteryId));
         model.addAttribute("usage", usage);
-        return "usage-form";
+        return "batteries/usage-form";
     }
 
     // Save usage log

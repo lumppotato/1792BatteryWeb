@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Locations</h2>
+
+<table>
+    <tr><th>Code</th><th>Name</th></tr>
+    <tr th:each="loc : ${locations}">
+        <td th:text="${loc.code}"></td>
+        <td th:text="${loc.name}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Inventory Items</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div style="max-width:1200px;margin:20px auto;color:#eee;">
+    <h2>Inventory Items</h2>
+
+    <div style="margin-bottom:15px;">
+        <a th:href="@{/inventory/items/new}"
+           sec:authorize="hasRole('ADMIN')"
+           style="background:#4caf50;color:white;padding:6px 12px;border-radius:4px;text-decoration:none;">
+            + New Item
+        </a>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+        <thead>
+        <tr style="background:#444;">
+            <th style="padding:8px;border-bottom:1px solid #555;">Part #</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Name</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Type</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">UOM</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">On Hand</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Allocated</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Available</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Min / Max</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(items)}">
+            <td colspan="9" style="padding:10px;text-align:center;color:#aaa;">
+                No inventory items yet.
+            </td>
+        </tr>
+
+        <tr th:each="item : ${items}">
+            <td style="padding:6px 8px;border-bottom:1px solid #444;"
+                th:text="${item.partNumber}">1792-XXXX</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;"
+                th:text="${item.name}">Example Thing</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;"
+                th:text="${item.itemType}">PURCHASED / MANUFACTURED</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;"
+                th:text="${item.unitOfMeasure}">Each</td>
+
+            <!-- These could be direct fields or calculated in a DTO -->
+            <td style="padding:6px 8px;border-bottom:1px solid #444;text-align:right;"
+                th:text="${item.onHandQuantity}">0</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;text-align:right;"
+                th:text="${item.allocatedQuantity}">0</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;text-align:right;"
+                th:text="${item.availableQuantity}">0</td>
+
+            <td style="padding:6px 8px;border-bottom:1px solid #444;text-align:center;">
+                <span th:text="${item.minStock}">0</span> /
+                <span th:text="${item.maxStock}">0</span>
+            </td>
+
+            <td style="padding:6px 8px;border-bottom:1px solid #444;">
+                <a th:href="@{'/inventory/items/' + ${item.id}}"
+                   style="color:#4fc3f7;margin-right:10px;">View</a>
+                <a th:href="@{'/inventory/items/' + ${item.id} + '/edit'}"
+                   sec:authorize="hasRole('ADMIN')"
+                   style="color:#ffc107;">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

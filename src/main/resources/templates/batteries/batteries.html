@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management • Battery Tracker</title>
+    <title>RTR | Batteries</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
 <!--    <style>-->
 <!--        :root {-->
@@ -11,7 +12,6 @@
 <!--            &#45;&#45;philippine-blue: #0039a2;-->
 <!--            &#45;&#45;royal-azure: #1866e1;-->
 <!--            &#45;&#45;baby-blue: #89cff0;-->
-<!--            &#45;&#45;cobalt-gray: #66676b;-->
 <!--            &#45;&#45;white: #ffffff;-->
 <!--        }-->
 
@@ -21,22 +21,6 @@
 <!--            background: #0f0f0f;-->
 <!--            color: var(&#45;&#45;white);-->
 <!--            min-height: 100vh;-->
-<!--        }-->
-
-<!--        /* Navbar (keeps your fragment) */-->
-<!--        .navbar {-->
-<!--            background: var(&#45;&#45;eerie-black);-->
-<!--            padding: 20px 40px;-->
-<!--            border-bottom: 3px solid var(&#45;&#45;royal-azure);-->
-<!--            text-align: center;-->
-<!--        }-->
-<!--        .navbar a {-->
-<!--            color: var(&#45;&#45;white);-->
-<!--            font-family: 'Oswald', sans-serif;-->
-<!--            font-size: 24px;-->
-<!--            text-transform: uppercase;-->
-<!--            text-decoration: none;-->
-<!--            letter-spacing: 1px;-->
 <!--        }-->
 
 <!--        .container {-->
@@ -105,6 +89,14 @@
 <!--        }-->
 <!--        .btn-delete:hover { background: #b71c1c; }-->
 
+<!--        .btn-view {-->
+<!--            background: var(&#45;&#45;philippine-blue);-->
+<!--            color: white;-->
+<!--            padding: 8px 16px;-->
+<!--            font-size: 14px;-->
+<!--        }-->
+<!--        .btn-view:hover { background: #002b7a; }-->
+
 <!--        table {-->
 <!--            width: 100%;-->
 <!--            border-collapse: collapse;-->
@@ -135,14 +127,14 @@
 <!--            background: #2a2a2a;-->
 <!--        }-->
 
-<!--        tr:last-child td {-->
-<!--            border-bottom: none;-->
-<!--        }-->
+<!--        tr:last-child td { border-bottom: none; }-->
 
-<!--        .role-admin { color: #ff6b6b; font-weight: bold; }-->
-<!--        .role-user { color: var(&#45;&#45;baby-blue); }-->
+<!--        .status-low     { color: #ff6b6b; font-weight: bold; }-->
+<!--        .status-charging{ color: #69f0ae; font-weight: bold; }-->
+<!--        .status-inuse   { color: #ffd740; font-weight: bold; }-->
+<!--        .status-idle    { color: var(&#45;&#45;baby-blue); }-->
 
-<!--        .no-users {-->
+<!--        .no-batteries {-->
 <!--            text-align: center;-->
 <!--            padding: 60px 20px;-->
 <!--            color: #888;-->
@@ -153,54 +145,55 @@
 </head>
 <body>
 
-<!-- Navbar Fragment -->
-<header class="navbar" th:replace="~{fragments/navbar :: navbar}">
-    <a href="/">Battery Tracker</a>
-</header>
+<!-- Your existing navbar fragment -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="container">
 
-    <h1 class="page-title">User Management</h1>
+    <h1 class="page-title">Battery Management</h1>
 
     <div class="actions-header">
-        <a th:href="@{/admin/users/new}" class="btn btn-add">Add User</a>
-        <a href="/" class="btn btn-back">Back to Dashboard</a>
+        <a th:href="@{/batteries/add}" class="btn btn-add">Add Battery</a>
+        <a href="/static" class="btn btn-back">Back to Dashboard</a>
     </div>
 
     <table>
         <thead>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
-            <th>Role</th>
+            <th>Serial Number</th>
+            <th>Brand</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>RFID Tag</th>
             <th style="text-align: center;">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="u : ${users}">
-            <td th:text="${u.firstName}">John</td>
-            <td th:text="${u.lastName}">Doe</td>
-            <td th:text="${u.username}">johndoe</td>
+        <tr th:each="b : ${batteries}">
+            <td th:text="${b.serialNumber}"></td>
+            <td th:text="${b.brand}"></td>
+            <td th:text="${b.capacitymAh} + ' mAh'"></td>
             <td>
-                        <span th:text="${u.role}"
-                              th:class="${u.role} == 'ADMIN' ? 'role-admin' : 'role-user'">
-                            USER
+                        <span th:text="${b.status}"
+                              th:class="'status-' + ${#strings.toLowerCase(b.status)}">
+                            IDLE
                         </span>
             </td>
+            <td th:text="${b.rfidTag} ?: '—'"></td>
             <td style="text-align: center; white-space: nowrap;">
-                <a th:href="@{'/admin/users/' + ${u.id} + '/edit'}"
-                   class="btn btn-edit">Edit</a>
-                <a th:href="@{'/admin/users/' + ${u.id} + '/delete'}"
+                <a th:href="@{/batteries/{id}(id=${b.id})}" class="btn btn-view">View</a>
+                <a th:href="@{/batteries/edit/{id}(id=${b.id})}" class="btn btn-edit">Edit</a>
+                <a th:href="@{/batteries/delete/{id}(id=${b.id})}"
                    class="btn btn-delete"
-                   onclick="return confirm('Permanently delete this user?');">Delete</a>
+                   onclick="return confirm('Permanently delete this battery?');">Delete</a>
             </td>
         </tr>
 
-        <!-- Empty state -->
-        <tr th:if="${users == null or #lists.isEmpty(users)}">
-            <td colspan="5" class="no-users">
-                No users found. <a th:href="@{/admin/users/new}">Create the first one</a>.
+        <!-- Empty state – identical to Users page -->
+        <tr th:if="${batteries == null or #lists.isEmpty(batteries)}">
+            <td colspan="6" class="no-batteries">
+                No batteries registered yet.
+                <a th:href="@{/batteries/add}">Add the first one</a>.
             </td>
         </tr>
         </tbody>

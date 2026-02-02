@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Stock Levels</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div style="max-width:1200px;margin:20px auto;color:#eee;">
+    <h2>Stock Levels by Location</h2>
+
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+        <thead>
+        <tr style="background:#444;">
+            <th style="padding:8px;border-bottom:1px solid #555;">Part #</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Name</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">Location</th>
+            <th style="padding:8px;border-bottom:1px solid #555;">On Hand</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(stock)}">
+            <td colspan="4" style="padding:10px;text-align:center;color:#aaa;">
+                No stock records found.
+            </td>
+        </tr>
+
+        <tr th:each="row : ${stock}">
+            <td style="padding:6px 8px;border-bottom:1px solid #444;"
+                th:text="${row.itemPartNumber}">PN-001</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;"
+                th:text="${row.itemName}">Item name</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;"
+                th:text="${row.locationName}">Main Room</td>
+            <td style="padding:6px 8px;border-bottom:1px solid #444;text-align:right;"
+                th:text="${row.onHandQty}">0</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

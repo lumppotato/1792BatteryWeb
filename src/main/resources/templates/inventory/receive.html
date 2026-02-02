@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<h2>Receive Stock</h2>
+
+<form action="/inventory/receive" method="post">
+    <label>Item:</label>
+    <select name="itemCode" th:each="i : ${items}" th:value="${i.code}" th:text="${i.name}"></select>
+
+    <label>Location:</label>
+    <select name="locationCode" th:each="l : ${locations}" th:value="${l.code}" th:text="${l.name}"></select>
+
+    <label>Quantity:</label>
+    <input type="number" name="qty"/>
+
+    <button type="submit">Receive</button>
+</form>
+
+</body>
+</html>

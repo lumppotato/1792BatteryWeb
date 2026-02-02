@@ -3,24 +3,62 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <div th:fragment="navbar">
-    <nav style="background:#333; padding:10px; display:flex; align-items:center; justify-content:space-between;">
-        <div>
-            <img src="/images/rtrlogo-nav.png" style="height:40px; vertical-align:middle; margin-right:15px;"/>
-            <a href="/" style="color:white; margin-right:15px;">Home</a>
-            <a href="/admin/users"
-               sec:authorize="hasRole('ADMIN')"
-               style="color:white; margin-right:15px;">Users</a>
-            <a href="/batteries" style="color:white; margin-right:15px;">🔋 Batteries</a>
-            <a href="/battery-tests/all" style="color:white; margin-right:15px;">📊 Battery Tests</a>
-            <a href="/usage" style="color:white; margin-right:15px;">🤖 Usage Logs</a>
+    <nav class="rtr-navbar">
+        <!-- LEFT: logo + main menus -->
+        <div class="rtr-nav-left">
+            <a href="/" class="rtr-logo-link">
+                <img src="/images/rtrlogo-nav.png" alt="RTR" class="rtr-logo">
+            </a>
+
+            <a href="/" class="rtr-nav-link">Home</a>
+
+            <!-- Batteries -->
+            <div class="rtr-dropdown">
+                <button class="rtr-drop-toggle">🔋 Batteries ▾</button>
+                <div class="rtr-drop-menu">
+                    <a href="/batteries" class="rtr-drop-item">Battery List</a>
+                    <a href="/battery-tests/all" class="rtr-drop-item">Battery Tests</a>
+                    <a href="/usage" class="rtr-drop-item">Usage Logs</a>
+                </div>
+            </div>
+
+            <!-- Inventory -->
+            <div class="rtr-dropdown">
+                <button class="rtr-drop-toggle">📦 Inventory ▾</button>
+                <div class="rtr-drop-menu">
+                    <a href="/inventory/items" class="rtr-drop-item">Items</a>
+                    <a href="/inventory/locations" class="rtr-drop-item">Locations</a>
+                    <a href="/inventory/stock" class="rtr-drop-item">Stock Levels</a>
+                    <a href="/inventory/receive" class="rtr-drop-item">Receive Stock</a>
+                    <a href="/inventory/boms" class="rtr-drop-item">BOMs</a>
+                </div>
+            </div>
+
+            <!-- Onshape -->
+            <div class="rtr-dropdown">
+                <button class="rtr-drop-toggle">🛠 Onshape ▾</button>
+                <div class="rtr-drop-menu">
+                    <a href="/onshape/import-bom" class="rtr-drop-item">Import BOM</a>
+                    <a href="/onshape/import-items" class="rtr-drop-item">Import Items</a>
+                </div>
+            </div>
+
+            <!-- Admin (admin only) -->
+            <div class="rtr-dropdown" sec:authorize="hasRole('ADMIN')">
+                <button class="rtr-drop-toggle">⚙ Admin ▾</button>
+                <div class="rtr-drop-menu">
+                    <a href="/admin/users" class="rtr-drop-item">Users</a>
+                    <a href="/admin/settings" class="rtr-drop-item">Settings</a>
+                </div>
+            </div>
         </div>
 
-        <div style="color:white;">
-            <span sec:authentication="name"></span>
-            <a href="/login" style="color:white; margin-left:10px;">Logout</a>
+        <!-- RIGHT: user + logout -->
+        <div class="rtr-nav-right">
+            <span class="rtr-username" sec:authentication="name"></span>
+            <a href="/logout" class="rtr-nav-link rtr-logout">Logout</a>
         </div>
     </nav>
-    <hr/>
 </div>
 </body>
 </html>

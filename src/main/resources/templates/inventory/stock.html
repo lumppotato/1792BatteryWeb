@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h2>Stock Levels</h2>
+
+<table>
+    <tr><th>Item</th><th>Location</th><th>Qty</th></tr>
+
+    <tr th:each="b : ${balances}">
+        <td th:text="${b.item.code}"></td>
+        <td th:text="${b.location.code}"></td>
+        <td th:text="${b.qty}"></td>
+    </tr>
+
+</table>
+
+</body>
+</html>
