@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/inventory")
-@RequiredArgsConstructor
 public class InventoryWebController {
 
     private final InventoryService service;
+
+    public InventoryWebController(InventoryService service) {
+        this.service = service;
+    }
 
     // ITEMS LIST PAGE
     @GetMapping("/items/view")

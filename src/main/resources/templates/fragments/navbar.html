@@ -55,6 +55,7 @@
 
         <!-- RIGHT: user + logout -->
         <div class="rtr-nav-right">
+            <a>Version: <span th:text="${version}"></span> </a>
             <span class="rtr-username" sec:authentication="name"></span>
             <a href="/logout" class="rtr-nav-link rtr-logout">Logout</a>
         </div>

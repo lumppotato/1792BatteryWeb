@@ -19,6 +19,9 @@
         <p style="margin-bottom:20px; color:#ccc;">
             Paste the Document ID, Workspace ID, and Element ID for your robot assembly.
         </p>
+        <p style="margin-bottom:20px; color:#ccc;">
+             You can get these from the URL, https://cad.onshape.com/documents/(DOC ID)/w/(WORKSPACE ID)/e/(ELEMENT ID)
+        </p>
 
         <form th:action="@{/onshape/import-bom}" th:object="${bomForm}" method="post">
             <label for="documentId">Document ID (DID)</label>
